@@ -1,10 +1,12 @@
-import { scenarios as scenariosEn, actions } from './scenarios.js?v=0.1.0';
-import { scenariosFr } from './scenarios-fr.js?v=0.1.0';
-import { translate } from './locales.js?v=0.1.0';
+import { scenarios as scenariosEn, actions } from './scenarios.js?v=0.2.0';
+import { scenariosFr } from './scenarios-fr.js?v=0.2.0';
+import { translate } from './locales.js?v=0.2.0';
+import { renderRepairWorkspace } from './repair-ui.js?v=0.2.0';
+import { summarizeRepairs } from './repair.js?v=0.2.0';
 let scenarios = scenariosEn;
 let language = 'en';
 const t = (key, values) => translate(language, key, values);
-import { reviewCase, summarizeSession } from './engine.js?v=0.1.0';
+import { reviewCase, summarizeSession } from './engine.js?v=0.2.0';
 
 const $ = id => document.getElementById(id);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -16,6 +18,7 @@ try {
       && scenarios.some(c => c.id === stored.current)) state = stored;
 } catch { /* A blocked or unavailable store does not prevent practice. */ }
 language = state.language === 'fr' ? 'fr' : 'en';
+state.repairs ??= {};
 scenarios = language === 'fr' ? scenariosFr : scenariosEn;
 let retrying = false;
 let draft = blankReview();
@@ -77,6 +80,13 @@ function renderFeedback() {
   target.innerHTML = `<span class="feedback-label">${r.complete ? t('supportedCase') : t('practiceMoment')}</span><h3 id="feedback-title">${title}</h3><p>${esc(c.explanation)}</p><div class="outcome"><span>${t('consequence')}</span><p>${esc(outcome)}</p></div><p>${esc(c.consequence)}</p><div class="feedback-stats"><span>${r.expectedIssues ? `<b>${r.found.length} / ${r.expectedIssues}</b> ${t('found')}` : t('noConcerns')}</span><span><b>${r.unnecessary.length}</b> ${t('unnecessary')}</span><span>${t('evidence')} <b>${r.evidenceComplete ? t('supported') : t('incomplete')}</b></span><span>${t('confidenceLabel')} <b>${r.confidence}%</b> · ${t('selfReported')}</span></div><div class="feedback-buttons"><button class="secondary" id="retry">${t('retry')}</button><button class="primary" id="next">${i < scenarios.length - 1 ? scenarios[i + 1].stage === 'transfer' ? t('tryFresh') : t('next') : t('reviewSession')}</button></div><p class="first-attempt-note">${t('firstAttemptNote')}</p>`;
   $('retry').addEventListener('click', () => { retrying = true; draft = blankReview(); renderCase(); $('workspace').focus(); });
   $('next').addEventListener('click', () => { if (i < scenarios.length - 1) selectCase(scenarios[i + 1].id); else showSession(); });
+  const workshop = document.createElement('section');
+  workshop.className = 'repair-workspace';
+  target.querySelector('.feedback-buttons').before(workshop);
+  state.repairs[c.id] ??= {};
+  state.repairs[c.id][language] ??= {};
+  renderRepairWorkspace(workshop, { scenario: c, language, t,
+    record: state.repairs[c.id][language], onSave: persist });
 }
 
 function renderCase() {
@@ -118,19 +128,24 @@ function showModal(html) {
 
 function showSession() {
   const s = summarizeSession(state.firstAttempts);
+  const repairs = summarizeRepairs(state.repairs);
   showModal(`<span class="eyebrow">${t('firstAttempts')}</span><h2>${t('sessionTitle')}</h2><p>${t('observations', { n: s.completed })}</p><div class="summary-grid"><div><strong>${s.supportedDecisions}/${s.completed}</strong><span>${t('supportedDecisions')}</span></div><div><strong>${s.issuesMissed}</strong><span>${t('missedConcerns')}</span></div><div><strong>${s.unnecessaryFlags}</strong><span>${t('extraFlags')}</span></div></div>${state.firstAttempts.map(r => `<div class="summary-row"><strong>${esc(scenarios.find(c => c.id === r.caseId)?.title || 'Case')}</strong><span>${r.complete ? t('supported') : t('needsPractice')} · ${r.confidence}%${r.assisted ? ' · ' + t('hintUsed') : ''}</span></div>`).join('')}<p>${t('assisted', { n: s.assistedCases, fresh: s.freshCasesCompleted })}</p><p>${t('sessionLimit')}</p><div class="modal-actions"><button class="secondary" id="reset">${t('reset')}</button><button class="primary" id="export">${t('download')}</button></div>`);
   $('export').addEventListener('click', exportSession);
+  const repairSummary = document.createElement('p');
+  repairSummary.textContent = t('repairSession', { checked: repairs.checkedDrafts, assisted: repairs.exampleAssistedDrafts });
+  $('modal-body').querySelector('.modal-actions').before(repairSummary);
   $('reset').addEventListener('click', () => {
     showModal(`<h2>${t('resetTitle')}</h2><p>${t('resetText')}</p><div class="modal-actions"><button class="secondary" id="cancel-reset">${t('keep')}</button><button class="primary" id="confirm-reset">${t('confirmReset')}</button></div>`);
     $('cancel-reset').addEventListener('click', () => { $('modal').close(); showSession(); });
-    $('confirm-reset').addEventListener('click', () => { state = { version: 1, language, current: scenarios[0].id, reviews: {}, firstAttempts: [] }; persist(); $('modal').close(); selectCase(scenarios[0].id); });
+    $('confirm-reset').addEventListener('click', () => { state = { version: 1, language, current: scenarios[0].id, reviews: {}, firstAttempts: [], repairs: {} }; persist(); $('modal').close(); selectCase(scenarios[0].id); });
   });
 }
 
 function exportSession() {
-  const record = { schemaVersion: 1, exportedAt: new Date().toISOString(),
+  const record = { schemaVersion: 2, exportedAt: new Date().toISOString(),
     kind: 'authored-practice-observations', summary: summarizeSession(state.firstAttempts),
     firstAttempts: state.firstAttempts,
+    rewrites: state.repairs, rewriteSummary: summarizeRepairs(state.repairs),
     limitations: ['Not an identity-verified or secure assessment.', 'Hints are tracked; external assistance is unknown.', 'Not evidence of validated learning gains or certification.'] };
   const address = URL.createObjectURL(new Blob([JSON.stringify(record, null, 2)], { type: 'application/json' }));
   const anchor = document.createElement('a'); anchor.href = address; anchor.download = 'reviewgym-session.json';

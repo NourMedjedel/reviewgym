@@ -1,5 +1,8 @@
+import { repairLocales } from './repair-locales.js?v=0.2.0';
+
 export const locales = {
   en: {
+    ...repairLocales.en,
     language: 'Language', practiceCases: 'Practice cases', workspace: 'Workspace', home: 'ReviewGym home',
     noConcerns: 'No concerns needed flagging',
     pageTitle: 'ReviewGym — Practise your AI judgment', skip: 'Skip to the case', beta: 'PLAYABLE PROTOTYPE', idea: 'The idea', session: 'Your session',
@@ -26,6 +29,7 @@ export const locales = {
     close: 'Close dialog', error: 'Please check your review and choose a next action.',
   },
   fr: {
+    ...repairLocales.fr,
     language: 'Langue', practiceCases: 'Cas pratiques', workspace: 'Espace de travail', home: 'Accueil ReviewGym',
     noConcerns: 'Aucun point à signaler',
     pageTitle: 'ReviewGym — Exercez votre discernement face à l’IA', skip: 'Aller au cas pratique', beta: 'PROTOTYPE INTERACTIF', idea: 'Le concept', session: 'Votre session',

@@ -24,6 +24,29 @@ The experience avoids timers and speed-based rewards. Correct answers are
 included so that rejecting everything is not a successful strategy. A request for
 help is recorded as an observation, not penalised as misconduct.
 
+## Rewrite workshop
+
+After committing to a review, the learner edits the actual message alongside a
+live recipient preview. A refund escalation becomes a note to the designated
+internal reviewer; it does not become a customer promise. A correct draft can be
+kept as it is. English and French working texts are saved separately.
+
+The quick check uses bounded, authored regular expressions to highlight known
+exercise details and notice missing context. It does not validate free-form
+meaning: negation, paraphrases and unrelated new errors can defeat these patterns.
+Even a text containing every expected keyword still requires human source review.
+No warning is labelled an approval. Tests include a deliberately incorrect
+keyword-complete rewrite to make this boundary explicit.
+
+The first checked rewrite and latest check are distinct snapshots. Viewing an
+authored example is recorded without replacing the learner’s text. Changing a
+checked draft invalidates its displayed feedback until it is checked again.
+These records remain separate from the first review decision. Export schema 2
+adds `rewrites` (case → language → draft, first/latest attempts, example viewed)
+and `rewriteSummary`. Version-1 browser sessions retain their original reviews.
+All text stays in browser storage unless the learner downloads the JSON export;
+the editor asks for fictional details only.
+
 ## Evidence and limits
 
 - Buçinca, Malaya and Gajos (2021), [To Trust or to Think](https://arxiv.org/abs/2102.09692):

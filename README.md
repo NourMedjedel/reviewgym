@@ -5,7 +5,8 @@
 Review a plausible assistant draft, inspect the source documents, flag the claims
 that need attention and decide whether to approve, revise or involve an authorised
 person. See a simulated consequence, get feedback and try the same principle in a
-different context. Some drafts are already correct.
+different context. Then edit the message yourself with a live recipient preview.
+Some drafts are already correct.
 
 **English and French included.** Language switching preserves the current review
 and session history. All scenarios, policies and assistant drafts are fictional
@@ -34,13 +35,23 @@ npm test
 2. Inspect the draft and the external-sharing rule.
 3. Flag the customer identifiers and confidential price. Cite the rule and choose
    **Revise** / **Corriger** to see the consequence.
-4. Retry, or deliberately approve the unsafe draft and inspect the feedback.
-5. Try the supported summary and the fresh HR-context case. Switch EN/FR at any time.
+4. Open the **rewrite workshop**, remove those confidential details and keep the
+   reproduction steps. Watch the recipient preview update, then check the rewrite.
+5. Try the supported summary and the fresh HR-context case. Switch EN/FR at any time;
+   each language keeps its own working draft.
 
 Other cases cover a real but archived citation and a refund promise made before
 human approval. The rubric checks sentence-level observations, source selection
 and the next action. Selecting every sentence or citing both current and obsolete
 procedures does not earn a supported result.
+
+![Rewrite workshop with an editable message, recipient preview and explicit checks](docs/repair-preview-en.png)
+
+The rewrite check highlights configured details from each exercise and looks for
+useful context that may have been removed. It uses authored text patterns, not an
+LLM judge. It can miss errors or flag harmless mentions; **it never approves the
+meaning of a rewrite**. Compare the result with the sources. An optional authored
+example is marked as assistance and does not overwrite your draft.
 
 ## What the record means
 
@@ -48,6 +59,11 @@ The session retains the **first attempt** separately from retries. It records
 missed concerns, unnecessary flags, evidence selection, next action, reported
 confidence and requested hints. Download an inspectable JSON summary from
 **Your session** / **Votre session**.
+
+The JSON export (schema version 2) also contains working rewrites by case and
+language, their first and latest checked versions, and whether an example was
+viewed. Editing a message does not replace the first review decision. Exports
+include the text you typed; use fictional details only.
 
 This is a formative practice tool, not an identity-verified exam, an anti-cheating
 system or a validated competence score. External AI assistance cannot be detected.
@@ -72,7 +88,7 @@ reports self-reported critical-thinking patterns, not a causal test of training.
 ## Next work
 
 - Test the cases with nontechnical learners and trainers; revise ambiguous rubrics.
-- Add hands-on draft repair and case variants, with documented reviewer checks.
+- Add case variants and independently reviewed content packs.
 - Offer an optional local-model coach that points to evidence; keep the authored
   rubric separate from generated explanations.
 - Evaluate learning using new cases and a delayed follow-up, with clear consent

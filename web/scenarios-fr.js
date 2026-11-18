@@ -1,4 +1,4 @@
-import { scenarios } from './scenarios.js?v=0.1.0';
+import { scenarios } from './scenarios.js?v=0.2.0';
 
 const translations = {
   'supplier-handoff': {
