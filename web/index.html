@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Practise reviewing AI output in realistic workplace situations. Inspect the evidence, make a decision, and learn from the consequences.">
+  <meta name="theme-color" content="#111b35">
+  <title>ReviewGym — Practise your AI judgment</title>
+  <link rel="stylesheet" href="styles.css?v=0.1.0">
+  <link rel="stylesheet" href="languages.css?v=0.1.0">
+</head>
+<body>
+  <a class="skip" href="#workspace"><span data-i18n="skip">Skip to the case</span></a>
+  <header class="topbar">
+    <a href="./" class="brand" aria-label="ReviewGym home"><span class="brand-mark" aria-hidden="true">r<span>g</span></span>ReviewGym<span class="beta"><span data-i18n="beta">PLAYABLE PROTOTYPE</span></span></a>
+    <nav aria-label="Workspace"><div class="language-switch" role="group" aria-label="Language"><button data-language="en" aria-pressed="true">EN</button><button data-language="fr" aria-pressed="false">FR</button></div><button class="quiet" id="about"><span data-i18n="idea">The idea</span></button><button id="session" class="session-button"><span data-i18n="session">Your session</span> <span id="session-count">0 / 5</span></button></nav>
+  </header>
+  <div class="layout">
+    <aside class="rail">
+      <div class="rail-heading"><span class="eyebrow"><span data-i18n="room">THE PRACTICE ROOM</span></span><h1><span data-i18n="intro">AI is fast.<br>Your judgment matters.</span></h1><p><span data-i18n="roomDescription">Five small workplace decisions.<br>Real things to think about.</span></p></div>
+      <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+      <p class="progress-label" id="progress-label">No cases reviewed yet</p>
+      <nav id="case-list" aria-label="Practice cases"></nav>
+      <div class="rail-note"><span class="note-symbol" aria-hidden="true">✳</span><p><span data-i18n="note">Some drafts need fixing.<br>Some are already good.<br>Checking is the skill.</span></p></div>
+      <p class="privacy-note"><span data-i18n="privacy">Synthetic cases. No account.<br>Progress stays in this browser.</span></p>
+    </aside>
+    <main id="workspace" tabindex="-1">
+      <div class="case-top"><div><span id="case-context" class="eyebrow"></span><h2 id="case-title"></h2><p id="case-mission"></p></div><span class="stage" id="case-stage"></span></div>
+      <div class="workbench">
+        <section class="draft-panel" aria-labelledby="draft-heading">
+          <div class="request"><span class="avatar" id="avatar" aria-hidden="true"></span><div><span class="request-meta" id="request-person"></span><p id="request-text"></p></div></div>
+          <div class="panel-header"><div><span class="eyebrow"><span data-i18n="yourReview">YOUR REVIEW</span></span><h3 id="draft-heading"><span data-i18n="draftHeading">The assistant’s draft</span></h3></div><span class="synthetic-badge"><span data-i18n="simulated">Simulated AI output</span></span></div>
+          <div class="instructions"><span class="instruction-icon" aria-hidden="true">✦</span><p><span data-i18n="instructions">Select any sentence that needs attention. Leave supported sentences unmarked.</span></p></div>
+          <div class="recipient"><span><span data-i18n="audience">Intended audience</span></span><strong id="recipient"></strong></div>
+          <div id="draft" class="draft"></div>
+          <div class="draft-toolbar"><p id="flag-count" aria-live="polite">No sentences flagged</p><button id="hint" class="hint-button"><span data-i18n="hint">I’d like a hint</span></button></div>
+          <div id="hint-box" class="hint-box" hidden></div>
+          <section class="decision" aria-labelledby="decision-heading">
+            <div class="section-line"><span class="eyebrow"><span data-i18n="makeCall">MAKE THE CALL</span></span><span><span data-i18n="nothingSent">Nothing is actually sent</span></span></div>
+            <h3 id="decision-heading"><span data-i18n="nextAction">What should happen next?</span></h3>
+            <div id="actions" class="actions"></div>
+            <div class="confidence"><label for="confidence"><span data-i18n="confidence">How confident are you in your review?</span></label><output id="confidence-value" for="confidence">50%</output><input type="range" id="confidence" min="0" max="100" step="5" value="50"><div class="range-labels"><span><span data-i18n="unsure">Still unsure</span></span><span><span data-i18n="sure">Very confident</span></span></div></div>
+            <div class="submit-line"><p id="review-instruction">Check the sources, then commit to a decision.</p><button id="submit" class="primary" disabled>See the consequence</button></div>
+            <p id="error" class="error" role="alert"></p>
+          </section>
+        </section>
+        <aside class="evidence-panel" aria-labelledby="evidence-heading"><div class="evidence-heading"><span class="eyebrow"><span data-i18n="evidenceEyebrow">DON’T TAKE ITS WORD FOR IT</span></span><h3 id="evidence-heading"><span data-i18n="evidenceHeading">Check the evidence</span></h3><p><span data-i18n="evidenceIntro">Open the source. Cite the ones that support your decision.</span></p></div><div id="sources"></div><div class="evidence-note"><span aria-hidden="true">⌁</span><p><span data-i18n="evidenceNote">A citation can be real and still be outdated, irrelevant or insufficient.</span></p></div><div class="help-note"><strong><span data-i18n="helpAllowed">Help is allowed.</span></strong><p><span data-i18n="helpDescription">This is a practice space. Hints are recorded so you can distinguish supported practice from a first attempt.</span></p></div></aside>
+      </div>
+      <section id="feedback" class="feedback" aria-labelledby="feedback-title" tabindex="-1" hidden></section>
+    </main>
+  </div>
+  <dialog id="modal"><button id="close-modal" class="close" aria-label="Close dialog">×</button><div id="modal-body"></div></dialog>
+  <script type="module" src="app.js?v=0.1.0"></script>
+</body>
+</html>
