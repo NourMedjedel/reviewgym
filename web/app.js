@@ -1,12 +1,12 @@
-import { scenarios as scenariosEn, actions } from './scenarios.js?v=0.3.0';
-import { scenariosFr } from './scenarios-fr.js?v=0.3.0';
-import { scenariosDe } from './scenarios-de.js?v=0.3.0';
-import { translate } from './locales.js?v=0.3.0';
-import { topics, topicFor } from './topics.js?v=0.3.0';
-import { resources } from './resources.js?v=0.3.0';
-import { reviewCase, summarizeSession } from './engine.js?v=0.3.0';
-import { renderRepairWorkspace } from './repair-ui.js?v=0.3.0';
-import { summarizeRepairs } from './repair.js?v=0.3.0';
+import { scenarios as scenariosEn, actions } from './scenarios.js?v=0.3.1';
+import { scenariosFr } from './scenarios-fr.js?v=0.3.1';
+import { scenariosDe } from './scenarios-de.js?v=0.3.1';
+import { translate } from './locales.js?v=0.3.1';
+import { topics, topicFor } from './topics.js?v=0.3.1';
+import { resources } from './resources.js?v=0.3.1';
+import { reviewCase, summarizeSession } from './engine.js?v=0.3.1';
+import { renderRepairWorkspace } from './repair-ui.js?v=0.3.1';
+import { summarizeRepairs } from './repair.js?v=0.3.1';
 
 const $ = id => document.getElementById(id);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -46,6 +46,8 @@ function applyLanguage() {
 }
 
 function renderLibrary() {
+  const words = t('libraryTitle').split(' ');
+  $('library-title').innerHTML = esc(words.slice(0, -1).join(' ')) + ' <em>' + esc(words.at(-1)) + '</em>';
   $('library-meta').textContent = t('libraryMeta', { total: scenarios.length });
   $('progress-label').textContent = t('progress', { done: summarizeSession(state.firstAttempts).completed, total: scenarios.length });
   $('topic-list').innerHTML = topics.map(topic => `<section class="topic-group" aria-labelledby="topic-${topic.id}"><div class="topic-heading"><h2 id="topic-${topic.id}">${t(topic.title)}</h2><p>${t(topic.description)}</p></div><div class="case-grid">${topic.cases.map(id => {
@@ -149,7 +151,7 @@ function showSession() {
   });
 }
 function exportSession() {
-  const record = { schemaVersion: 3, catalogVersion: '0.3.0', language, exportedAt: new Date().toISOString(),
+  const record = { schemaVersion: 3, catalogVersion: '0.3.1', language, exportedAt: new Date().toISOString(),
     kind: 'authored-practice-observations', summary: summarizeSession(state.firstAttempts), firstAttempts: state.firstAttempts,
     rewrites: state.repairs, rewriteSummary: summarizeRepairs(state.repairs),
     limitations: ['Not an identity-verified assessment.', 'External assistance is unknown.', 'Learning effectiveness and regulatory compliance have not been validated.', 'Rewrite checks do not validate free-form meaning.'] };
@@ -160,6 +162,10 @@ function exportSession() {
 
 $('topic-list').addEventListener('click', e => { const c = e.target.closest('[data-case]'); if (c) selectCase(c.dataset.case); });
 $('practice-nav').addEventListener('click', () => changeView('library'));
+$('explore').addEventListener('click', () => {
+  $('topic-list').querySelector('[data-case]')?.focus({ preventScroll: true });
+  $('topic-list').scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+});
 $('back-library').addEventListener('click', () => changeView('library'));
 $('guide-nav').addEventListener('click', () => changeView('guide'));
 $('language').addEventListener('change', e => { language = e.target.value; state.language = language; scenarios = packs[language]; persist(); render(); });

@@ -6,8 +6,9 @@
   <meta name="description" content="Practise AI judgment in a fictional banking-software workplace. Ten source-based exercises in English, French and German.">
   <meta name="theme-color" content="#f6f7f8">
   <title>ReviewGym — AI judgment at work</title>
-  <link rel="stylesheet" href="styles.css?v=0.3.0">
-  <link rel="stylesheet" href="repair.css?v=0.3.0">
+  <link rel="stylesheet" href="styles.css?v=0.3.1">
+  <link rel="stylesheet" href="repair.css?v=0.3.1">
+  <link rel="stylesheet" href="editorial.css?v=0.3.1">
 </head>
 <body>
   <a class="skip" href="#content" data-i18n="skip">Skip to content</a>
@@ -22,8 +23,12 @@
   </header>
   <main id="content" tabindex="-1">
     <section id="library-view" aria-labelledby="library-title">
-      <div class="page-intro"><span class="meta" id="library-meta"></span><h1 id="library-title" data-i18n="libraryTitle">AI judgment at work</h1><p data-i18n="libraryIntro"></p><p class="progress-label" id="progress-label"></p></div>
-      <div id="topic-list"></div>
+      <div class="library-hero">
+        <div class="page-intro"><span class="meta" id="library-meta"></span><h1 id="library-title" data-i18n="libraryTitle">AI judgment at work</h1><p data-i18n="libraryIntro"></p><div class="hero-actions"><button class="primary" id="explore" data-i18n="explore">Choose a topic</button><p class="progress-label" id="progress-label"></p></div></div>
+        <figure class="hero-diagram"><img src="practice-orbit.svg" alt="" aria-hidden="true"><figcaption data-i18n="flowTitle">The practice loop</figcaption><ol class="flow-labels"><li data-i18n="flowDraft">AI draft</li><li data-i18n="flowSources">Check the sources</li><li data-i18n="flowDecision">You decide</li></ol></figure>
+      </div>
+      <div class="library-heading" data-i18n="library">All topics</div>
+      <div id="topic-list" tabindex="-1"></div>
     </section>
     <section id="guide-view" aria-labelledby="guide-title" hidden>
       <div class="page-intro"><h1 id="guide-title" data-i18n="guideTitle"></h1><p data-i18n="guideIntro"></p></div>
@@ -62,6 +67,6 @@
   </main>
   <footer><p data-i18n="privacy"></p><a href="https://github.com/NourMedjedel/reviewgym" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
   <dialog id="modal"><button id="close-modal" class="close" aria-label="Close dialog">×</button><div id="modal-body"></div></dialog>
-  <script type="module" src="app.js?v=0.3.0"></script>
+  <script type="module" src="app.js?v=0.3.1"></script>
 </body>
 </html>

@@ -27,6 +27,11 @@ It is a transfer opportunity, not an independently validated transfer assessment
 The library is separate from the single-exercise view. Sources open on demand,
 reflection is optional, and a recorded review collapses when feedback appears.
 The field guide contains reusable habits and primary-source context. The
+monochrome visual system uses a display heading, a schematic practice-loop
+illustration and a separate editorial topic column. The illustration is static
+and decorative; it does not represent a live agent, risk measurement or activity.
+The exercise view keeps the same focused sequence, with context, draft, sources
+and decision. The
 experience avoids timers and speed-based rewards. Correct answers are
 included so that rejecting everything is not a successful strategy. A request for
 help is recorded as an observation, not penalised as misconduct.

@@ -17,7 +17,7 @@ policies and assistant outputs are authored simulations. No LLM or paid API is
 needed. Translations are machine-assisted and checked for content/rubric parity;
 independent language and domain review remains open.
 
-![Screen walkthrough: inspect the evidence, review the draft and repair the handoff](docs/demo.webp)
+![Screen walkthrough: check evidence, choose the next step and revise the draft](docs/demo.webp)
 
 Edited screen walkthrough of the working prototype. All assistant outputs are
 authored simulations; no message is sent to an external recipient.

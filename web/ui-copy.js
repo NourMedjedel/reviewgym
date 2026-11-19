@@ -1,5 +1,10 @@
 // English, French, Swiss standard German. No silent language fallback.
 export const uiCopy = {
+  explore: ['Choose a topic', 'Choisir un thème', 'Ein Thema wählen'],
+  flowTitle: ['The practice loop', 'Le parcours d’entraînement', 'Der Übungsablauf'],
+  flowDraft: ['AI draft', 'Brouillon d’IA', 'KI-Entwurf'],
+  flowSources: ['Check the sources', 'Vérifier les sources', 'Quellen prüfen'],
+  flowDecision: ['You decide', 'Vous décidez', 'Du entscheidest'],
   notProvided: ['Not provided', 'Non renseignée', 'Nicht angegeben'],
   language: ['Language', 'Langue', 'Sprache'], workspace: ['Workspace', 'Espace de travail', 'Arbeitsbereich'],
   home: ['ReviewGym home', 'Accueil ReviewGym', 'ReviewGym Startseite'],

@@ -1,5 +1,5 @@
-import { repairLocales } from './repair-locales.js?v=0.3.0';
-import { uiCopy } from './ui-copy.js?v=0.3.0';
+import { repairLocales } from './repair-locales.js?v=0.3.1';
+import { uiCopy } from './ui-copy.js?v=0.3.1';
 
 export const locales = Object.fromEntries(['en', 'fr', 'de'].map((language, i) => [language,
   { ...repairLocales[language], ...Object.fromEntries(Object.entries(uiCopy).map(([key, values]) => [key, values[i]])) },

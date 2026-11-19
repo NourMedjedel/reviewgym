@@ -1,5 +1,5 @@
-import { bankingFr } from './banking-translations.js?v=0.3.0';
-import { scenarios } from './scenarios.js?v=0.3.0';
+import { bankingFr } from './banking-translations.js?v=0.3.1';
+import { scenarios } from './scenarios.js?v=0.3.1';
 
 const translations = {
   ...bankingFr,
