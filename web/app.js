@@ -7,16 +7,15 @@ import { resources } from './resources.js?v=0.3.5';
 import { reviewCase, summarizeSession } from './engine.js?v=0.3.5';
 import { renderRepairWorkspace } from './repair-ui.js?v=0.3.5';
 import { summarizeRepairs } from './repair.js?v=0.3.5';
+import { createSession, restoreSession } from './session.js?v=0.3.6';
 
 const $ = id => document.getElementById(id);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const KEY = 'reviewgym.practice.v1';
 const packs = { en: scenariosEn, fr: scenariosFr, de: scenariosDe };
-let state = { version: 1, language: 'en', current: scenariosEn[0].id, reviews: {}, firstAttempts: [], repairs: {} };
+let state = createSession(scenariosEn);
 try {
-  const stored = JSON.parse(localStorage.getItem(KEY));
-  if (stored?.version === 1 && stored.reviews && Array.isArray(stored.firstAttempts)
-      && scenariosEn.some(c => c.id === stored.current)) state = stored;
+  state = restoreSession(localStorage.getItem(KEY), scenariosEn);
 } catch { /* Practice still works when browser storage is unavailable. */ }
 let language = Object.hasOwn(packs, state.language) ? state.language : 'en';
 state.repairs ??= {};
@@ -136,7 +135,12 @@ function selectCase(id) {
   view = 'practice'; persist(); render(); $('workspace').focus();
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 }
-function showModal(html) { $('modal-body').innerHTML = html; if (!$('modal').open) $('modal').showModal(); }
+function showModal(html) {
+  $('modal-body').innerHTML = html;
+  $('modal-body').querySelector('h2').id = 'modal-title';
+  $('modal').setAttribute('aria-labelledby', 'modal-title');
+  if (!$('modal').open) $('modal').showModal();
+}
 function showSession() {
   const s = summarizeSession(state.firstAttempts), rewrites = summarizeRepairs(state.repairs);
   showModal(`<h2>${t('sessionTitle')}</h2><p>${t('observations', { n: s.completed })}</p><div class="summary-grid"><div><strong>${s.supportedDecisions}/${s.completed}</strong><span>${t('supportedDecisions')}</span></div><div><strong>${s.issuesMissed}</strong><span>${t('missedConcerns')}</span></div><div><strong>${s.unnecessaryFlags}</strong><span>${t('extraFlags')}</span></div></div>${state.firstAttempts.map(r => `<div class="summary-row"><strong>${esc(scenarios.find(c => c.id === r.caseId)?.title || r.caseId)}</strong><span>${r.complete ? t('supported') : t('needsPractice')} · ${confidenceText(r.confidence)}${r.assisted ? ' · ' + t('hintUsed') : ''}</span></div>`).join('')}<p>${t('assisted', { n: s.assistedCases, fresh: s.freshCasesCompleted })}</p><p>${t('repairSession', { checked: rewrites.checkedDrafts, assisted: rewrites.exampleAssistedDrafts })}</p><p>${t('sessionLimit')}</p><div class="modal-actions"><button class="secondary" id="reset">${t('reset')}</button><button class="primary" id="export">${t('download')}</button></div>`);
@@ -145,13 +149,13 @@ function showSession() {
     showModal(`<h2>${t('resetTitle')}</h2><p>${t('resetText')}</p><div class="modal-actions"><button class="secondary" id="cancel-reset">${t('keep')}</button><button class="primary" id="confirm-reset">${t('confirmReset')}</button></div>`);
     $('cancel-reset').addEventListener('click', showSession);
     $('confirm-reset').addEventListener('click', () => {
-      state = { version: 1, language, current: scenarios[0].id, reviews: {}, firstAttempts: [], repairs: {} };
+      state = createSession(scenarios, language);
       draft = blankReview(); retrying = false; persist(); $('modal').close(); changeView('library');
     });
   });
 }
 function exportSession() {
-  const record = { schemaVersion: 3, catalogVersion: '0.3.5', language, exportedAt: new Date().toISOString(),
+  const record = { schemaVersion: 3, catalogVersion: '0.3.6', language, exportedAt: new Date().toISOString(),
     kind: 'authored-practice-observations', summary: summarizeSession(state.firstAttempts), firstAttempts: state.firstAttempts,
     rewrites: state.repairs, rewriteSummary: summarizeRepairs(state.repairs),
     limitations: ['Not an identity-verified assessment.', 'External assistance is unknown.', 'Learning effectiveness and regulatory compliance have not been validated.', 'Rewrite checks do not validate free-form meaning.'] };
@@ -169,14 +173,36 @@ $('explore').addEventListener('click', () => {
 $('back-library').addEventListener('click', () => changeView('library'));
 $('guide-nav').addEventListener('click', () => changeView('guide'));
 $('language').addEventListener('change', e => { language = e.target.value; state.language = language; scenarios = packs[language]; persist(); render(); });
-$('draft').addEventListener('click', e => { const s = e.target.closest('[data-sentence]'); if (s && !completed()) { draft.flags = toggle(draft.flags, s.dataset.sentence); renderDraft(); } });
+$('draft').addEventListener('click', e => {
+  const sentence = e.target.closest('[data-sentence]');
+  if (sentence && !completed()) {
+    const id = sentence.dataset.sentence;
+    draft.flags = toggle(draft.flags, id);
+    renderDraft();
+    $('draft').querySelector(`[data-sentence="${id}"]`).focus({ preventScroll: true });
+  }
+});
 $('evidence-panel').addEventListener('toggle', e => { draft.sourcesVisible = e.target.open; });
 $('sources').addEventListener('click', e => {
   const s = e.target.closest('[data-source]');
-  if (s) { const id = s.dataset.source; draft.expandedSources = toggle(draft.expandedSources || draft.openedSources, id); if (!draft.openedSources.includes(id)) draft.openedSources.push(id); renderSources(); }
+  if (s) {
+    const id = s.dataset.source;
+    draft.expandedSources = toggle(draft.expandedSources || draft.openedSources, id);
+    if (!draft.openedSources.includes(id)) draft.openedSources.push(id);
+    renderSources();
+    $('sources').querySelector(`[data-source="${id}"]`).focus({ preventScroll: true });
+  }
 });
 $('sources').addEventListener('change', e => { if (e.target.dataset.evidence && !completed()) draft.evidence = toggle(draft.evidence, e.target.dataset.evidence); });
-$('actions').addEventListener('click', e => { const a = e.target.closest('[data-action]'); if (a && !completed()) { draft.action = a.dataset.action; renderActions(); } });
+$('actions').addEventListener('click', e => {
+  const action = e.target.closest('[data-action]');
+  if (action && !completed()) {
+    const id = action.dataset.action;
+    draft.action = id;
+    renderActions();
+    $('actions').querySelector(`[data-action="${id}"]`).focus({ preventScroll: true });
+  }
+});
 $('confidence').addEventListener('input', e => { draft.confidence = e.target.value === '' ? null : Number(e.target.value); });
 $('hint').addEventListener('click', () => { draft.assisted = true; $('hint-box').hidden = false; $('hint-box').textContent = currentCase().hint; });
 $('submit').addEventListener('click', () => {

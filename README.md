@@ -92,6 +92,19 @@ visible in the browser source.
 Progress uses localStorage when available and otherwise lasts for the current
 page session. No user accounts, telemetry, real workplace uploads or external
 model requests are involved. Reset is available in the session panel.
+Saved records are checked on reload: malformed entries are ignored while valid
+choices and rewrites are retained. Derived feedback is recalculated from those
+choices using the current authored rubric.
+
+## Code map
+
+| Module | Responsibility |
+| --- | --- |
+| [engine.js](web/engine.js) | Deterministic review rubric and session observations |
+| [repair.js](web/repair.js) | Bounded rewrite checks; no semantic approval |
+| [session.js](web/session.js) | Restore and validate saved practice records |
+| [app.js](web/app.js), [repair-ui.js](web/repair-ui.js) | Browser interface and interactions |
+| [tests/](tests/) | Rubric, translation, rewrite and saved-state regression tests |
 
 ## Design and research
 

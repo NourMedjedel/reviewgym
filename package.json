@@ -1,6 +1,6 @@
 {
   "name": "reviewgym",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "private": true,
   "type": "module",
   "description": "Practise decisions about AI output in a simulated workplace.",
