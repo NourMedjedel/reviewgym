@@ -89,8 +89,7 @@ are not checked, and external assistance is unknown.
 - [FINMA Guidance 08/2024](https://www.finma.ch/en/news/2024/12/20241218-mm-finma-am-08-24/),
   published 18 December 2024, describes governance and risk-management themes for
   financial institutions. It informs topic selection, especially model, data and
-  third-party risks. This does not establish that Finnova is directly supervised
-  under this guidance or that ReviewGym satisfies any regulatory obligation.
+  third-party risks.
 - [OWASP LLM01:2025](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
   informs the boundary between retrieved content and authorised instructions.
 - [OWASP LLM06:2025](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/)
