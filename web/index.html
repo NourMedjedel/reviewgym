@@ -6,9 +6,9 @@
   <meta name="description" content="Practise AI judgment in a fictional banking-software workplace. Ten source-based exercises in English, French and German.">
   <meta name="theme-color" content="#f6f7f8">
   <title>ReviewGym — AI judgment at work</title>
-  <link rel="stylesheet" href="styles.css?v=0.3.1">
-  <link rel="stylesheet" href="repair.css?v=0.3.1">
-  <link rel="stylesheet" href="editorial.css?v=0.3.1">
+  <link rel="stylesheet" href="styles.css?v=0.3.2">
+  <link rel="stylesheet" href="repair.css?v=0.3.2">
+  <link rel="stylesheet" href="editorial.css?v=0.3.2">
 </head>
 <body>
   <a class="skip" href="#content" data-i18n="skip">Skip to content</a>
@@ -25,7 +25,17 @@
     <section id="library-view" aria-labelledby="library-title">
       <div class="library-hero">
         <div class="page-intro"><span class="meta" id="library-meta"></span><h1 id="library-title" data-i18n="libraryTitle">AI judgment at work</h1><p data-i18n="libraryIntro"></p><div class="hero-actions"><button class="primary" id="explore" data-i18n="explore">Choose a topic</button><p class="progress-label" id="progress-label"></p></div></div>
-        <figure class="hero-diagram"><img src="practice-orbit.svg" alt="" aria-hidden="true"><figcaption data-i18n="flowTitle">The practice loop</figcaption><ol class="flow-labels"><li data-i18n="flowDraft">AI draft</li><li data-i18n="flowSources">Check the sources</li><li data-i18n="flowDecision">You decide</li></ol></figure>
+        <figure class="hero-diagram">
+          <img src="practice-orbit.svg" alt="" aria-hidden="true">
+          <svg class="flow-connectors" viewBox="0 0 440 570" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="flow-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1L8 5L1 9" fill="none" stroke="#d0d2d9" stroke-width="1.5"/></marker></defs><path d="M305 167C405 167 405 208 357 235M120 343C35 343 35 384 83 404" fill="none" stroke="#c3c5cd" stroke-width="1.4" marker-end="url(#flow-arrow)"/></svg>
+          <figcaption data-i18n="flowTitle">Example: check a deadline</figcaption>
+          <ol class="flow-steps">
+            <li><span class="flow-step-number" aria-hidden="true">1</span><strong data-i18n="flowDraft">Read the AI draft</strong><p data-i18n="flowDraftExample">“Your first update is due within 24 hours.”</p></li>
+            <li><span class="flow-step-number" aria-hidden="true">2</span><strong data-i18n="flowSources">Compare with the sources</strong><p data-i18n="flowSourceExample">Current rule: 4 hours. Alert received at 09:00.</p></li>
+            <li><span class="flow-step-number" aria-hidden="true">3</span><strong data-i18n="flowDecision">Choose the next step</strong><p data-i18n="flowDecisionExample">Revise: first update by 13:00 today.</p></li>
+          </ol>
+          <p class="flow-note" data-i18n="flowNote">Approve, revise or refer: the evidence guides your choice.</p>
+        </figure>
       </div>
       <div class="library-heading" data-i18n="library">All topics</div>
       <div id="topic-list" tabindex="-1"></div>
@@ -67,6 +77,6 @@
   </main>
   <footer><p data-i18n="privacy"></p><a href="https://github.com/NourMedjedel/reviewgym" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
   <dialog id="modal"><button id="close-modal" class="close" aria-label="Close dialog">×</button><div id="modal-body"></div></dialog>
-  <script type="module" src="app.js?v=0.3.1"></script>
+  <script type="module" src="app.js?v=0.3.2"></script>
 </body>
 </html>

@@ -113,50 +113,42 @@ main {
 .hero-diagram {
   position: relative;
   margin: 0;
-  aspect-ratio: 1;
+  height: 520px;
   background: #111214;
   color: #fff;
-  overflow: hidden;
   border-radius: 22px 22px 5px 22px;
   box-shadow: 0 18px 36px #0000000e;
+  overflow: hidden;
 }
-.hero-diagram > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: .92;
-}
+.hero-diagram > img { position: absolute; inset: 12% -5%; width: 110%; height: 76%; opacity: .85; animation: orbit-drift 55s linear infinite; }
+@keyframes orbit-drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .hero-diagram figcaption {
   position: absolute;
   top: 25px;
   left: 26px;
-  font-size: 11px;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-  color: #aeb0b5;
-}
-.flow-labels {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.flow-labels li {
-  position: absolute;
-  padding: 9px 12px;
-  color: #eeeef1;
-  background: #18191cee;
-  border: 1px solid #414248;
-  border-radius: 5px;
   font-size: 13px;
-  line-height: 1.45;
-  max-width: 49%;
-  box-shadow: 0 5px 20px #00000036;
+  line-height: 1.5;
+  color: #bfc0c7;
 }
-.flow-labels li:nth-child(1) { left: 9%; top: 23%; }
-.flow-labels li:nth-child(2) { right: 7%; top: 45%; }
-.flow-labels li:nth-child(3) { left: 15%; bottom: 14%; border-color: #92949c; }
+.flow-connectors { position: absolute; inset: 0; width: 100%; height: 100%; }
+.flow-steps { list-style: none; margin: 0; padding: 0; }
+.flow-steps li {
+  position: absolute;
+  width: 68%;
+  padding: 14px 16px;
+  background: #15161ae6;
+  border: 1px solid #696b75;
+  border-radius: 4px 14px 14px 14px;
+  box-shadow: 0 8px 24px #0005;
+}
+.flow-steps li:nth-child(1) { left: 7%; top: 14%; }
+.flow-steps li:nth-child(2) { right: 7%; top: 43%; }
+.flow-steps li:nth-child(3) { left: 7%; top: 72%; border-color: #b5b7c0; background: #23252ae6; }
+.flow-step-number { display: inline-grid; place-items: center; width: 20px; height: 20px; border: 1px solid #747680; border-radius: 50%; font: 12px ui-monospace, SFMono-Regular, monospace; margin-right: 7px; }
+.flow-steps strong { font-size: 14px; line-height: 1.5; font-weight: 550; }
+.flow-steps p { margin: 8px 0 0; color: #c6c8d0; font-size: 13px; line-height: 1.55; }
+.flow-steps li:last-child p { color: #fff; }
+.flow-note { position: absolute; left: 7%; right: 7%; bottom: 16px; margin: 0; color: #bfc0c7; font-size: 12px; line-height: 1.5; }
 .library-heading {
   display: flex;
   align-items: center;
@@ -252,11 +244,6 @@ footer { max-width: 1200px; }
 @media(max-width:800px) {
   .library-hero { grid-template-columns: 1fr; gap: 32px; margin-bottom: 42px; }
   .library-hero h1 { max-width: 650px; font-size: clamp(46px, 8.5vw, 66px); }
-  .hero-diagram { aspect-ratio: 1.6; max-height: 315px; }
-  .hero-diagram > img { width: 65%; left: 18%; opacity: .75; }
-  .flow-labels li:nth-child(1) { left: 13%; top: 30%; }
-  .flow-labels li:nth-child(2) { right: 8%; top: 48%; }
-  .flow-labels li:nth-child(3) { left: 25%; bottom: 12%; }
   .topic-group { grid-template-columns: 1fr; gap: 16px; }
   .topic-heading p { margin-top: 6px; }
 }
@@ -272,12 +259,16 @@ footer { max-width: 1200px; }
   .library-hero .page-intro > p:not(.progress-label) { font-size: 16px; margin-top: 20px; }
   .hero-actions { gap: 14px; margin-top: 22px; }
   .hero-actions .primary { padding: 12px 18px; }
-  .hero-diagram { aspect-ratio: 1.4; }
-  .hero-diagram figcaption { top: 17px; left: 19px; font-size: 10px; }
-  .flow-labels li { font-size: 12px; padding: 7px 9px; }
+  .hero-diagram { height: 640px; }
+  .hero-diagram figcaption { left: 7%; }
+  .flow-steps li:nth-child(3) { top: 70%; }
+  .flow-steps li { padding: 14px; }
+  .flow-step-number { display: none; }
   .case-grid { grid-template-columns: 1fr; }
   .case-card { padding: 22px; }
   .case-card strong { font-size: 18px; }
   .request { padding: 19px 21px; }
   .sentence { padding: 14px; }
 }
+
+@media (prefers-reduced-motion: reduce) { .hero-diagram > img { animation: none; } }

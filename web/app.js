@@ -1,12 +1,12 @@
-import { scenarios as scenariosEn, actions } from './scenarios.js?v=0.3.1';
-import { scenariosFr } from './scenarios-fr.js?v=0.3.1';
-import { scenariosDe } from './scenarios-de.js?v=0.3.1';
-import { translate } from './locales.js?v=0.3.1';
-import { topics, topicFor } from './topics.js?v=0.3.1';
-import { resources } from './resources.js?v=0.3.1';
-import { reviewCase, summarizeSession } from './engine.js?v=0.3.1';
-import { renderRepairWorkspace } from './repair-ui.js?v=0.3.1';
-import { summarizeRepairs } from './repair.js?v=0.3.1';
+import { scenarios as scenariosEn, actions } from './scenarios.js?v=0.3.2';
+import { scenariosFr } from './scenarios-fr.js?v=0.3.2';
+import { scenariosDe } from './scenarios-de.js?v=0.3.2';
+import { translate } from './locales.js?v=0.3.2';
+import { topics, topicFor } from './topics.js?v=0.3.2';
+import { resources } from './resources.js?v=0.3.2';
+import { reviewCase, summarizeSession } from './engine.js?v=0.3.2';
+import { renderRepairWorkspace } from './repair-ui.js?v=0.3.2';
+import { summarizeRepairs } from './repair.js?v=0.3.2';
 
 const $ = id => document.getElementById(id);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -151,7 +151,7 @@ function showSession() {
   });
 }
 function exportSession() {
-  const record = { schemaVersion: 3, catalogVersion: '0.3.1', language, exportedAt: new Date().toISOString(),
+  const record = { schemaVersion: 3, catalogVersion: '0.3.2', language, exportedAt: new Date().toISOString(),
     kind: 'authored-practice-observations', summary: summarizeSession(state.firstAttempts), firstAttempts: state.firstAttempts,
     rewrites: state.repairs, rewriteSummary: summarizeRepairs(state.repairs),
     limitations: ['Not an identity-verified assessment.', 'External assistance is unknown.', 'Learning effectiveness and regulatory compliance have not been validated.', 'Rewrite checks do not validate free-form meaning.'] };
