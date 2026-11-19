@@ -137,5 +137,4 @@ GitHub Actions runs the tests before publishing only `web/` to GitHub Pages on
 each push to `main`. Pull requests run tests without deploying. The static demo
 needs no server credentials or model keys.
 
-Independent portfolio prototype by Nour Medjedel. Not affiliated with Finnova,
-Microsoft or any training/certification provider. MIT licensed.
+Independent portfolio prototype by Nour Medjedel. Not affiliated with any training/certification provider. MIT licensed.
