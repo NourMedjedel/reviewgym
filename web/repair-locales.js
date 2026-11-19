@@ -1,4 +1,4 @@
-import { repairExtraLocales, repairDe } from './repair-lexicon.js?v=0.3.4';
+import { repairExtraLocales, repairDe } from './repair-lexicon.js?v=0.3.5';
 
 export const repairLocales = {
   en: {

@@ -1,4 +1,4 @@
-import { bankingCases } from './banking-cases.js?v=0.3.4';
+import { bankingCases } from './banking-cases.js?v=0.3.5';
 
 // Project-authored, synthetic practice cases. Every policy is fictional.
 // Rubrics are intentionally inspectable: this is practice, not a secure exam.

@@ -135,9 +135,10 @@ main {
   height: 116%;
   object-fit: contain;
 }
-.orbit-core { opacity: .53; animation: orbit-drift 80s linear infinite; }
+.orbit-core { opacity: .9; animation: orbit-drift 80s linear infinite; }
 .orbit-halo { animation: orbit-counter-drift 115s linear infinite; opacity: .65; }
-.banking-network { filter: drop-shadow(0 10px 16px #323b4b0c); }
+.review-lens { filter: drop-shadow(0 8px 14px #323b4b08); animation: lens-float 14s ease-in-out infinite; }
+@keyframes lens-float { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-3px,-6px); } }
 @keyframes orbit-drift { from { transform: rotate(-12deg); } to { transform: rotate(348deg); } }
 @keyframes orbit-counter-drift { from { transform: rotate(16deg); } to { transform: rotate(-344deg); } }
 .library-heading {

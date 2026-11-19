@@ -28,13 +28,13 @@ The library is separate from the single-exercise view. Sources open on demand,
 reflection is optional, and a recorded review collapses when feedback appears.
 The field guide contains reusable habits and primary-source context. The
 monochrome visual system uses a display heading and a separate editorial topic
-column. The decorative orbital illustration has no text labels or process claims. A
-stationary vault and connected document, payment, ledger and shield motifs
-connect the visual to banking data, source checking and approval boundaries.
-Fine wireframe geometry, translucent shading and two slowly counter-rotating
-layers blend into the page background. Reduced-motion preferences disable both
-animations. The network is symbolic: it represents no live activity, actual bank
-architecture, security certification or risk measurement.
+column. A banknote-inspired guilloche engraving replaces literal banking icons.
+A stationary glass review lens magnifies its linework while the engraved seal and
+fine orbital security threads rotate slowly underneath. The drawing connects
+financial-document authenticity with the act of inspecting AI output, without
+text overlays. Reduced-motion preferences disable both animations. This is an
+original decorative metaphor, not a real banknote, an authenticity test, live
+telemetry, or a security claim.
 The exercise view keeps the same focused sequence, with context, draft, sources
 and decision. The
 experience avoids timers and speed-based rewards. Correct answers are
