@@ -28,10 +28,13 @@ The library is separate from the single-exercise view. Sources open on demand,
 reflection is optional, and a recorded review collapses when feedback appears.
 The field guide contains reusable habits and primary-source context. The
 monochrome visual system uses a display heading and a separate editorial topic
-column. The decorative orbital illustration has no labels or process claims.
+column. The decorative orbital illustration has no text labels or process claims. A
+stationary vault and connected document, payment, ledger and shield motifs
+connect the visual to banking data, source checking and approval boundaries.
 Fine wireframe geometry, translucent shading and two slowly counter-rotating
 layers blend into the page background. Reduced-motion preferences disable both
-animations. The drawing represents no live activity or risk measurement.
+animations. The network is symbolic: it represents no live activity, actual bank
+architecture, security certification or risk measurement.
 The exercise view keeps the same focused sequence, with context, draft, sources
 and decision. The
 experience avoids timers and speed-based rewards. Correct answers are

@@ -1,4 +1,4 @@
-import { extraRepairSpecs, deExamples } from './repair-extra.js?v=0.3.3';
+import { extraRepairSpecs, deExamples } from './repair-extra.js?v=0.3.4';
 
 /** Narrow, authored text checks for practice. These do not approve arbitrary prose. */
 export const MAX_REPAIR_LENGTH = 6000;
