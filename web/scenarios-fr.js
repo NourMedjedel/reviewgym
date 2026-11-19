@@ -1,6 +1,8 @@
-import { scenarios } from './scenarios.js?v=0.2.0';
+import { bankingFr } from './banking-translations.js?v=0.3.0';
+import { scenarios } from './scenarios.js?v=0.3.0';
 
 const translations = {
+  ...bankingFr,
   'supplier-handoff': {
     title: 'Un récapitulatif bien utile', context: 'Opérations clients', skill: 'Choisir ce qui peut être partagé',
     request: 'Peux-tu envoyer à notre prestataire logiciel un résumé du bug d’export ? Il lui faut assez de détails pour le reproduire.',

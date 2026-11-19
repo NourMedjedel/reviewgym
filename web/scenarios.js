@@ -1,6 +1,8 @@
-// Human-authored, synthetic practice cases. Every policy is fictional.
+import { bankingCases } from './banking-cases.js?v=0.3.0';
+
+// Project-authored, synthetic practice cases. Every policy is fictional.
 // Rubrics are intentionally inspectable: this is practice, not a secure exam.
-export const scenarios = [
+const originalScenarios = [
   {
     id: 'supplier-handoff', family: 'confidentiality', stage: 'practice',
     title: 'A helpful handoff', context: 'Customer operations', minutes: '3 min',
@@ -123,6 +125,8 @@ export const scenarios = [
     consequence: 'Learning should transfer to a fresh situation, not just the exact example you practised.',
   },
 ];
+
+export const scenarios = [...originalScenarios.slice(0, -1), ...bankingCases, originalScenarios.at(-1)];
 
 export const actions = [
   { id: 'approve', title: 'Approve', description: 'Ready for its intended audience' },

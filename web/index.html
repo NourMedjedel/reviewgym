@@ -3,54 +3,65 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Practise reviewing AI output in realistic workplace situations. Inspect the evidence, make a decision, and learn from the consequences.">
-  <meta name="theme-color" content="#111b35">
-  <title>ReviewGym — Practise your AI judgment</title>
-  <link rel="stylesheet" href="styles.css?v=0.2.0">
-  <link rel="stylesheet" href="languages.css?v=0.2.0">
-  <link rel="stylesheet" href="repair.css?v=0.2.0">
+  <meta name="description" content="Practise AI judgment in a fictional banking-software workplace. Ten source-based exercises in English, French and German.">
+  <meta name="theme-color" content="#f6f7f8">
+  <title>ReviewGym — AI judgment at work</title>
+  <link rel="stylesheet" href="styles.css?v=0.3.0">
+  <link rel="stylesheet" href="repair.css?v=0.3.0">
 </head>
 <body>
-  <a class="skip" href="#workspace"><span data-i18n="skip">Skip to the case</span></a>
+  <a class="skip" href="#content" data-i18n="skip">Skip to content</a>
   <header class="topbar">
-    <a href="./" class="brand" aria-label="ReviewGym home"><span class="brand-mark" aria-hidden="true">r<span>g</span></span>ReviewGym<span class="beta"><span data-i18n="beta">PLAYABLE PROTOTYPE</span></span></a>
-    <nav aria-label="Workspace"><div class="language-switch" role="group" aria-label="Language"><button data-language="en" aria-pressed="true">EN</button><button data-language="fr" aria-pressed="false">FR</button></div><button class="quiet" id="about"><span data-i18n="idea">The idea</span></button><button id="session" class="session-button"><span data-i18n="session">Your session</span> <span id="session-count">0 / 5</span></button></nav>
+    <a href="./" class="brand" aria-label="ReviewGym home"><span class="brand-mark" aria-hidden="true">rg</span>ReviewGym</a>
+    <nav aria-label="Workspace">
+      <button class="nav-link" id="practice-nav" data-i18n="practice">Practice</button>
+      <button class="nav-link" id="guide-nav" data-i18n="guide">Field guide</button>
+      <button class="nav-link" id="session" data-i18n="session">Session</button>
+    </nav>
+    <label class="language-switch"><span class="sr-only" data-i18n="language">Language</span><select id="language"><option value="en" lang="en">English</option><option value="fr" lang="fr">Français</option><option value="de" lang="de-CH">Deutsch (CH)</option></select></label>
   </header>
-  <div class="layout">
-    <aside class="rail">
-      <div class="rail-heading"><span class="eyebrow"><span data-i18n="room">THE PRACTICE ROOM</span></span><h1><span data-i18n="intro">AI is fast.<br>Your judgment matters.</span></h1><p><span data-i18n="roomDescription">Five small workplace decisions.<br>Real things to think about.</span></p></div>
-      <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
-      <p class="progress-label" id="progress-label">No cases reviewed yet</p>
-      <nav id="case-list" aria-label="Practice cases"></nav>
-      <div class="rail-note"><span class="note-symbol" aria-hidden="true">✳</span><p><span data-i18n="note">Some drafts need fixing.<br>Some are already good.<br>Checking is the skill.</span></p></div>
-      <p class="privacy-note"><span data-i18n="privacy">Synthetic cases. No account.<br>Progress stays in this browser.</span></p>
-    </aside>
-    <main id="workspace" tabindex="-1">
-      <div class="case-top"><div><span id="case-context" class="eyebrow"></span><h2 id="case-title"></h2><p id="case-mission"></p></div><span class="stage" id="case-stage"></span></div>
-      <div class="workbench">
-        <section class="draft-panel" aria-labelledby="draft-heading">
-          <div class="request"><span class="avatar" id="avatar" aria-hidden="true"></span><div><span class="request-meta" id="request-person"></span><p id="request-text"></p></div></div>
-          <div class="panel-header"><div><span class="eyebrow"><span data-i18n="yourReview">YOUR REVIEW</span></span><h3 id="draft-heading"><span data-i18n="draftHeading">The assistant’s draft</span></h3></div><span class="synthetic-badge"><span data-i18n="simulated">Simulated AI output</span></span></div>
-          <div class="instructions"><span class="instruction-icon" aria-hidden="true">✦</span><p><span data-i18n="instructions">Select any sentence that needs attention. Leave supported sentences unmarked.</span></p></div>
-          <div class="recipient"><span><span data-i18n="audience">Intended audience</span></span><strong id="recipient"></strong></div>
-          <div id="draft" class="draft"></div>
-          <div class="draft-toolbar"><p id="flag-count" aria-live="polite">No sentences flagged</p><button id="hint" class="hint-button"><span data-i18n="hint">I’d like a hint</span></button></div>
-          <div id="hint-box" class="hint-box" hidden></div>
-          <section class="decision" aria-labelledby="decision-heading">
-            <div class="section-line"><span class="eyebrow"><span data-i18n="makeCall">MAKE THE CALL</span></span><span><span data-i18n="nothingSent">Nothing is actually sent</span></span></div>
-            <h3 id="decision-heading"><span data-i18n="nextAction">What should happen next?</span></h3>
-            <div id="actions" class="actions"></div>
-            <div class="confidence"><label for="confidence"><span data-i18n="confidence">How confident are you in your review?</span></label><output id="confidence-value" for="confidence">50%</output><input type="range" id="confidence" min="0" max="100" step="5" value="50"><div class="range-labels"><span><span data-i18n="unsure">Still unsure</span></span><span><span data-i18n="sure">Very confident</span></span></div></div>
-            <div class="submit-line"><p id="review-instruction">Check the sources, then commit to a decision.</p><button id="submit" class="primary" disabled>See the consequence</button></div>
-            <p id="error" class="error" role="alert"></p>
+  <main id="content" tabindex="-1">
+    <section id="library-view" aria-labelledby="library-title">
+      <div class="page-intro"><span class="meta" id="library-meta"></span><h1 id="library-title" data-i18n="libraryTitle">AI judgment at work</h1><p data-i18n="libraryIntro"></p><p class="progress-label" id="progress-label"></p></div>
+      <div id="topic-list"></div>
+    </section>
+    <section id="guide-view" aria-labelledby="guide-title" hidden>
+      <div class="page-intro"><h1 id="guide-title" data-i18n="guideTitle"></h1><p data-i18n="guideIntro"></p></div>
+      <div id="guide-habits"></div>
+      <section class="research" aria-labelledby="research-heading"><h2 id="research-heading" data-i18n="researchTitle"></h2><p class="muted" data-i18n="researchIntro"></p><div id="research-list"></div></section>
+    </section>
+    <section id="workspace" tabindex="-1" hidden>
+      <button class="back-link" id="back-library" data-i18n="library">All topics</button>
+      <div class="case-top"><p class="meta" id="case-context"></p><h1 id="case-title"></h1><p id="case-mission"></p></div>
+      <details id="review-workspace" class="review-workspace" open>
+        <summary id="review-summary" data-i18n="submittedReview" hidden>Your submitted review</summary>
+        <div class="workbench">
+          <div class="request"><span id="request-person" class="meta"></span><p id="request-text"></p></div>
+          <section class="draft-panel" aria-labelledby="draft-heading">
+            <div class="panel-header"><h2 id="draft-heading" data-i18n="draftHeading">Review the draft</h2><span class="meta" data-i18n="simulated">Simulated assistant</span></div>
+            <p class="muted" data-i18n="instructions"></p>
+            <p class="recipient"><span data-i18n="audience">Audience</span> <strong id="recipient"></strong></p>
+            <div id="draft" class="draft"></div>
+            <div class="draft-toolbar"><span id="flag-count" class="meta" aria-live="polite"></span><button id="hint" class="text-button" data-i18n="hint">Need a hint?</button></div>
+            <p id="hint-box" class="hint-box" hidden></p>
           </section>
-        </section>
-        <aside class="evidence-panel" aria-labelledby="evidence-heading"><div class="evidence-heading"><span class="eyebrow"><span data-i18n="evidenceEyebrow">DON’T TAKE ITS WORD FOR IT</span></span><h3 id="evidence-heading"><span data-i18n="evidenceHeading">Check the evidence</span></h3><p><span data-i18n="evidenceIntro">Open the source. Cite the ones that support your decision.</span></p></div><div id="sources"></div><div class="evidence-note"><span aria-hidden="true">⌁</span><p><span data-i18n="evidenceNote">A citation can be real and still be outdated, irrelevant or insufficient.</span></p></div><div class="help-note"><strong><span data-i18n="helpAllowed">Help is allowed.</span></strong><p><span data-i18n="helpDescription">This is a practice space. Hints are recorded so you can distinguish supported practice from a first attempt.</span></p></div></aside>
-      </div>
-      <section id="feedback" class="feedback" aria-labelledby="feedback-title" tabindex="-1" hidden></section>
-    </main>
-  </div>
+          <details class="evidence-panel" id="evidence-panel">
+            <summary><span data-i18n="evidenceHeading">Sources</span><span class="meta" id="source-count"></span></summary>
+            <p class="muted" data-i18n="evidenceIntro"></p><div id="sources"></div><p class="meta" data-i18n="evidenceNote"></p>
+          </details>
+          <section class="decision" aria-labelledby="decision-heading">
+            <h2 id="decision-heading" data-i18n="nextAction">What should happen next?</h2>
+            <div id="actions" class="actions"></div>
+            <details class="reflection"><summary data-i18n="reflection">Optional reflection</summary><div class="confidence"><label for="confidence" data-i18n="confidence"></label><input type="number" id="confidence" min="0" max="100" step="1" inputmode="numeric"></div></details>
+            <div class="submit-line"><span class="meta" data-i18n="nothingSent"></span><button id="submit" class="primary" disabled data-i18n="submit">Check my decision</button></div><p id="error" class="error" role="alert"></p>
+          </section>
+        </div>
+      </details>
+      <section id="feedback" aria-labelledby="feedback-title" tabindex="-1" hidden></section>
+    </section>
+  </main>
+  <footer><p data-i18n="privacy"></p><a href="https://github.com/NourMedjedel/reviewgym" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
   <dialog id="modal"><button id="close-modal" class="close" aria-label="Close dialog">×</button><div id="modal-body"></div></dialog>
-  <script type="module" src="app.js?v=0.2.0"></script>
+  <script type="module" src="app.js?v=0.3.0"></script>
 </body>
 </html>

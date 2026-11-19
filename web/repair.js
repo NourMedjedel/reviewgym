@@ -1,7 +1,10 @@
+import { extraRepairSpecs, deExamples } from './repair-extra.js?v=0.3.0';
+
 /** Narrow, authored text checks for practice. These do not approve arbitrary prose. */
 export const MAX_REPAIR_LENGTH = 6000;
 
 const specs = {
+  ...extraRepairSpecs,
   'supplier-handoff': {
     risks: [
       { id: 'identity', label: 'repairIdentity', pattern: /\bjuniper\s+bank\b|\bJB[\s-]*20491\b/iu },
@@ -18,11 +21,11 @@ const specs = {
   },
   'expired-procedure': {
     risks: [
-      { id: 'old-deadline', label: 'repairOldDeadline', pattern: /\b24\s*(?:hours?|heures?|h)\b|\b(?:tomorrow|demain)\b/iu },
+      { id: 'old-deadline', label: 'repairOldDeadline', pattern: /\b24\s*(?:hours?|heures?|stunden?|h)\b|\b(?:tomorrow|demain|morgen)\b/iu },
     ],
     facts: [
-      { id: 'incident', label: 'repairIncidentFact', pattern: /\bincident\b/iu },
-      { id: 'current-time', label: 'repairTimeFact', pattern: /\b13\s*(?::\s*00|h(?:eures)?(?:\s*00)?)\b|\b1\s*(?::\s*00)?\s*p\.?m\.?/iu },
+      { id: 'incident', label: 'repairIncidentFact', pattern: /\b(?:incident|vorfall)\b/iu },
+      { id: 'current-time', label: 'repairTimeFact', pattern: /\b13\s*(?::\s*00|h(?:eures)?(?:\s*00)?|\s*Uhr)\b|\b1\s*(?::\s*00)?\s*p\.?m\.?/iu },
     ],
     example: {
       en: 'We have received your priority incident at 09:00 today and started the initial review.\n\nUnder the current procedure, the first status update is due by 13:00 today. Further updates will be recorded on the incident ticket.',
@@ -33,8 +36,8 @@ const specs = {
     risks: [],
     facts: [
       { id: 'owner', label: 'repairOwnerFact', pattern: /\bAsha\b/iu },
-      { id: 'dataset-date', label: 'repairFridayFact', pattern: /\b(?:Friday|vendredi)\b/iu },
-      { id: 'review-date', label: 'repairMondayFact', pattern: /\b(?:Monday|lundi)\b/iu },
+      { id: 'dataset-date', label: 'repairFridayFact', pattern: /\b(?:Friday|vendredi|Freitag)\b/iu },
+      { id: 'review-date', label: 'repairMondayFact', pattern: /\b(?:Monday|lundi|Montag)\b/iu },
     ],
     example: {
       en: 'Asha will prepare the test dataset by Friday. The team will review it on Monday before deciding whether to start the pilot. No launch date has been agreed.',
@@ -43,12 +46,12 @@ const specs = {
   },
   'unapproved-refund': {
     risks: [
-      { id: 'approval-claim', label: 'repairApprovalClaim', pattern: /\b(?:has\s+been|is)\s+approved\b|\ba\s+[eé]t[eé]\s+approuv[eé]/iu },
-      { id: 'payment-promise', label: 'repairPaymentPromise', pattern: /\b(?:will|shall)\s+be\s+paid\b|\bsera\s+(?:vers[eé]|pay[eé])|\bwithin\s+five\s+days\b|\bdans\s+(?:un\s+d[eé]lai\s+de\s+)?cinq\s+jours\b/iu },
+      { id: 'approval-claim', label: 'repairApprovalClaim', pattern: /\b(?:has\s+been|is)\s+approved\b|\ba\s+[eé]t[eé]\s+approuv[eé]|\bwurde\s+genehmigt\b/iu },
+      { id: 'payment-promise', label: 'repairPaymentPromise', pattern: /\b(?:will|shall)\s+be\s+paid\b|\bsera\s+(?:vers[eé]|pay[eé])|\bwithin\s+five\s+days\b|\bdans\s+(?:un\s+d[eé]lai\s+de\s+)?cinq\s+jours\b|\bwird[\s\S]{0,50}ausgezahlt\b|innerhalb\s+von\s+f[üu]nf\s+Tagen/iu },
     ],
     facts: [
-      { id: 'pending', label: 'repairPendingFact', pattern: /\b(?:pending|awaiting)\b|\ben\s+attente\b/iu },
-      { id: 'request-review', label: 'repairReviewerFact', pattern: /\b(?:review|reviewer|approval|decision)\b|\b(?:examen|validation|d[eé]cision)\b/iu },
+      { id: 'pending', label: 'repairPendingFact', pattern: /\b(?:pending|awaiting)\b|\ben\s+attente\b|ausstehend/iu },
+      { id: 'request-review', label: 'repairReviewerFact', pattern: /\b(?:review|reviewer|approval|decision)\b|\b(?:examen|validation|d[eé]cision|freigabe|entscheidung|pr[üu]f(?:e|ung))\b/iu },
     ],
     example: {
       en: 'Please review this refund request. The eligibility check passed, but approval is still pending and no payment has been scheduled.\n\nCould the designated reviewer record a decision before we make a commitment to the customer?',
@@ -58,11 +61,11 @@ const specs = {
   'workshop-transfer': {
     risks: [
       { id: 'employee-id', label: 'repairEmployeeId', pattern: /\bR[\s-]*18\b/iu },
-      { id: 'individual-results', label: 'repairIndividualResults', pattern: /\bfailed\b|\b[eé]chou[eé]\b|\bperformance\s+support\s+plan\b|\baccompagnement\s+pour\s+ses\s+performances\b/iu },
+      { id: 'individual-results', label: 'repairIndividualResults', pattern: /\bfailed\b|\b[eé]chou[eé]\b|\bperformance\s+support\s+plan\b|\baccompagnement\s+pour\s+ses\s+performances\b|nicht\s+bestanden|Leistungsf[öo]rderplan/iu },
     ],
     facts: [
-      { id: 'workshop', label: 'repairWorkshopFact', pattern: /\b(?:workshop|atelier|exercices?|exercises?)\b/iu },
-      { id: 'learning-needs', label: 'repairLearningFact', pattern: /\b(?:sources?|review|relecture|checking|v[eé]rification)\b/iu },
+      { id: 'workshop', label: 'repairWorkshopFact', pattern: /\b(?:workshop|atelier|exercices?|exercises?|Workshop)\b/iu },
+      { id: 'learning-needs', label: 'repairLearningFact', pattern: /\b(?:sources?|review|relecture|checking|v[eé]rification|Quellen|Pr[üu]fung)\b/iu },
     ],
     example: {
       en: 'Please plan a hands-on workshop on checking sources and reviewing AI-generated messages. Participants have mixed levels of experience, so include exercises at different levels. An anonymous overview of the group’s needs is sufficient.',
@@ -70,6 +73,8 @@ const specs = {
     },
   },
 };
+
+for (const [id, text] of Object.entries(deExamples)) specs[id].example.de = text;
 
 function getSpec(caseId) {
   const spec = specs[caseId];
@@ -80,7 +85,7 @@ function getSpec(caseId) {
 /** Return an explicitly authored example; this is assistance, not a model response. */
 export function exampleRepair(caseId, language) {
   const value = getSpec(caseId).example[language];
-  if (!value || !['en', 'fr'].includes(language)) throw new Error('Unknown practice language.');
+  if (!value || !['en', 'fr', 'de'].includes(language)) throw new Error('Unknown practice language.');
   return value;
 }
 

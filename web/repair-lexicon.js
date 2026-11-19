@@ -1,0 +1,46 @@
+export const repairExtraLocales = {
+  en: {
+    repairSuspiciousDestination: 'Destination from the injected instruction', repairTicketRef: 'Ticket T-42', repairSecurityReview: 'Security review',
+    repairWrongRate: 'Incorrect 1% rate', repairCausalNumber: 'Unsupported 75% claim', repairCorrectRates: 'Observed 4% and 5% rates', repairComparisonLimit: 'Limits of the comparison',
+    repairUnapprovedService: 'Unapproved public service', repairSyntheticData: 'Synthetic data scope', repairApprovedRoute: 'Private Review API',
+    repairWriteScope: 'Write permission outside the pilot', repairReadScope: 'discrepancies.read scope', repairPlatformOwner: 'Platform-owner review', repairSample: '18 of 20 cases', repairPendingRelease: 'Pending production approval',
+    repairScope: 'What this check can verify',
+  },
+  fr: {
+    repairSuspiciousDestination: 'Destinataire de l’instruction injectée', repairTicketRef: 'Ticket T-42', repairSecurityReview: 'Examen de sécurité',
+    repairWrongRate: 'Taux erroné de 1 %', repairCausalNumber: 'Affirmation de 75 % non étayée', repairCorrectRates: 'Taux observés de 4 % et 5 %', repairComparisonLimit: 'Limites de la comparaison',
+    repairUnapprovedService: 'Service public non autorisé', repairSyntheticData: 'Périmètre de données synthétiques', repairApprovedRoute: 'Private Review API',
+    repairWriteScope: 'Droit d’écriture hors périmètre', repairReadScope: 'Droit discrepancies.read', repairPlatformOwner: 'Revue du responsable de la plateforme', repairSample: '18 cas sur 20', repairPendingRelease: 'Approbation de production en attente',
+    repairScope: 'Ce que cette vérification peut contrôler',
+  },
+  de: {
+    repairSuspiciousDestination: 'Ziel aus der eingeschleusten Anweisung', repairTicketRef: 'Ticket T-42', repairSecurityReview: 'Sicherheitsprüfung',
+    repairWrongRate: 'Falsche Quote von 1 %', repairCausalNumber: 'Unbelegte Aussage von 75 %', repairCorrectRates: 'Beobachtete Quoten von 4 % und 5 %', repairComparisonLimit: 'Grenzen des Vergleichs',
+    repairUnapprovedService: 'Nicht freigegebener öffentlicher Dienst', repairSyntheticData: 'Synthetische Daten', repairApprovedRoute: 'Private Review API',
+    repairWriteScope: 'Schreibrecht ausserhalb des Pilotumfangs', repairReadScope: 'Berechtigung discrepancies.read', repairPlatformOwner: 'Prüfung durch Plattformverantwortliche', repairSample: '18 von 20 Fällen', repairPendingRelease: 'Ausstehende Produktionsfreigabe',
+    repairScope: 'Was diese Prüfung erkennen kann',
+  },
+};
+
+export const repairDe = {
+  repairEyebrow: 'DEINE ÜBERARBEITUNG', repairTitle: 'Deine Überarbeitung', repairKeepTitle: 'Freiwillige Überarbeitung',
+  repairBrief: 'Bearbeite die Nachricht und prüfe die Vorschau. Behalte nützliche Angaben bei.',
+  repairEscalateBrief: 'Verfasse eine interne Notiz für die zuständige Person. Halte fest, was vor einer Aktion geprüft oder freigegeben werden muss.',
+  repairOpen: 'Text bearbeiten', repairClose: 'Editor schliessen', repairEditor: 'Dein Entwurf',
+  repairLanguageNote: 'Jede Sprache hat einen eigenen Entwurf. Verwende nur fiktive Angaben.',
+  repairSources: 'Quellen ansehen', repairCheck: 'Text prüfen', repairExample: 'Beispiel ansehen',
+  repairExampleRecorded: 'Beispiel angesehen. Dein Entwurf bleibt erhalten; die Hilfe wird vermerkt.', repairExampleLabel: 'Eine mögliche Überarbeitung',
+  repairPreview: 'Vorschau', repairPreviewNote: 'Es wird nichts versendet oder genehmigt.', repairApprover: 'Zuständige interne Person', repairCheckResults: 'Textprüfung',
+  repairLimit: 'Die Prüfung erkennt festgelegte Angaben aus dieser Übung. Sie kann andere Fehler übersehen oder harmlose Erwähnungen markieren. Vergleiche die gesamte Aussage mit den Quellen.',
+  repairEmptyPreview: 'Hier erscheint deine Vorschau.', repairChanged: 'Text seit der letzten Prüfung geändert. Prüfe ihn erneut.',
+  repairNotChecked: 'Bearbeite den Text und starte die Prüfung.', repairEmpty: 'Ein leerer Entwurf löst die Aufgabe nicht.',
+  repairAttention: 'Einige Angaben brauchen noch deine Aufmerksamkeit.', repairMissing: 'Einige nützliche Angaben fehlen möglicherweise. Vergleiche mit der Quelle.',
+  repairCompare: 'Keine konfigurierte Warnung erkannt. Prüfe nun die Bedeutung anhand der Quellen.',
+  repairRiskFound: 'In dieser Übung weiterhin erkannt', repairRiskNotFound: 'Von dieser Prüfung nicht erkannt', repairDetailMentioned: 'Erwähnung gefunden; Bedeutung prüfen', repairDetailMissing: 'Keine konfigurierte Erwähnung gefunden',
+  repairIdentity: 'Kundenname oder Kontokennung', repairPrice: 'Vertrauliche Supportgebühr', repairExportFact: 'CSV- oder Exportkontext', repairErrorFact: 'Fehlercode E104',
+  repairOldDeadline: 'Überholte Frist oder Verweis auf morgen', repairIncidentFact: 'Vorfallkontext', repairTimeFact: 'Aktuelle Frist um 13:00 Uhr',
+  repairOwnerFact: 'Asha genannt', repairFridayFact: 'Freitag erwähnt', repairMondayFact: 'Montag erwähnt', repairApprovalClaim: 'Behauptete Genehmigung', repairPaymentPromise: 'Zahlungszusage',
+  repairPendingFact: 'Ausstehende Freigabe', repairReviewerFact: 'Prüfung oder Entscheidung angefragt', repairEmployeeId: 'Individuelle Personalkennung', repairIndividualResults: 'Individuelles Ergebnis oder Leistungsförderplan',
+  repairWorkshopFact: 'Workshop- oder Übungskontext', repairLearningFact: 'Quellenprüfung oder Kontrollbedarf',
+  repairSession: 'Geprüfte Entwürfe: {checked}. Entwürfe mit angesehenem Beispiel: {assisted}. Überarbeitungen bleiben von der ersten Entscheidung getrennt.',
+};

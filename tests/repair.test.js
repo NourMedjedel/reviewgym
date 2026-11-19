@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { inspectRepair, exampleRepair, retainRepairAttempt, summarizeRepairs, MAX_REPAIR_LENGTH } from '../web/repair.js';
 import { scenarios } from '../web/scenarios.js';
 import { scenariosFr } from '../web/scenarios-fr.js';
+import { scenariosDe } from '../web/scenarios-de.js';
 import { translate } from '../web/locales.js';
 
 test('privacy details are highlighted at original offsets, including separated prices and repeated IDs', () => {
@@ -13,8 +14,8 @@ test('privacy details are highlighted at original offsets, including separated p
   assert.deepEqual(r.ranges.map(s => text.slice(s.start, s.end)), ['Juniper Bank', 'JB-20491', 'JB 20491', '84\u00a0000']);
 });
 
-test('all authored examples in both languages retain useful details without granting semantic approval', () => {
-  for (const c of scenarios) for (const language of ['en', 'fr']) {
+test('all ten authored examples in all three languages retain context without semantic approval', () => {
+  for (const c of scenarios) for (const language of ['en', 'fr', 'de']) {
     const r = inspectRepair(c.id, exampleRepair(c.id, language));
     assert.equal(r.status, 'compare-with-sources', `${c.id}/${language}`);
     assert.equal(r.requiresHumanReview, true);
@@ -37,7 +38,7 @@ test('replacing the hour but leaving a next-day promise still raises a warning',
 });
 
 test('refund promises are distinguished from the authored pending-approval handoff', () => {
-  for (const pack of [scenarios, scenariosFr]) {
+  for (const pack of [scenarios, scenariosFr, scenariosDe]) {
     const c = pack.find(c => c.id === 'unapproved-refund');
     const r = inspectRepair(c.id, c.draft.map(s => s.text).join('\n'));
     assert.equal(r.attentionCount, 2);
@@ -46,7 +47,7 @@ test('refund promises are distinguished from the authored pending-approval hando
 });
 
 test('a supported original draft can be retained without forcing gratuitous rewriting', () => {
-  for (const pack of [scenarios, scenariosFr]) {
+  for (const pack of [scenarios, scenariosFr, scenariosDe]) {
     const c = pack.find(c => c.id === 'valid-summary');
     assert.equal(inspectRepair(c.id, c.draft.map(s => s.text).join('\n')).status, 'compare-with-sources');
   }
@@ -61,7 +62,7 @@ test('keyword coverage is explicitly insufficient to validate meaning', () => {
 
 test('invalid case, language and oversized inputs fail without echoing user text', () => {
   assert.throws(() => inspectRepair('__proto__', ''), /Unknown practice case/);
-  assert.throws(() => exampleRepair('valid-summary', 'de'), /Unknown practice language/);
+  assert.throws(() => exampleRepair('valid-summary', 'nl'), /Unknown practice language/);
   assert.throws(() => inspectRepair('valid-summary', null), /must be text/);
   assert.throws(() => inspectRepair('valid-summary', 'sensitive'.repeat(MAX_REPAIR_LENGTH)), error => {
     assert.equal(error.message.includes('sensitive'), false);

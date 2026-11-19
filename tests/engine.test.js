@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { reviewCase, summarizeSession } from '../web/engine.js';
 import { scenarios } from '../web/scenarios.js';
 import { scenariosFr } from '../web/scenarios-fr.js';
+import { scenariosDe } from '../web/scenarios-de.js';
 import { locales, translate } from '../web/locales.js';
 
 function correct(c) {
@@ -97,21 +98,26 @@ test('assisted fresh-context practice is recorded without an overall skill score
   assert.equal(Object.hasOwn(summary, 'competenceScore'), false);
 });
 
-test('English and French cases have identical rubric results and meaningful translated content', () => {
-  assert.deepEqual(scenarios.map(c => c.id), scenariosFr.map(c => c.id));
-  for (let i = 0; i < scenarios.length; i++) {
-    const a = scenarios[i], b = scenariosFr[i];
+test('English, French and German cases preserve rubric results, sentences and source identities', () => {
+  for (const pack of [scenariosFr, scenariosDe]) {
+    assert.deepEqual(scenarios.map(c => c.id), pack.map(c => c.id));
+    for (let i = 0; i < scenarios.length; i++) {
+    const a = scenarios[i], b = pack[i];
     assert.notEqual(a.title, b.title);
     assert.equal(a.draft.length, b.draft.length);
     assert.equal(a.documents.length, b.documents.length);
     assert.ok(b.documents.every(d => d.title && d.body && d.label));
     assert.deepEqual(reviewCase(a, correct(a)), reviewCase(b, correct(b)));
+    assert.deepEqual(a.documents.map(d => d.id), b.documents.map(d => d.id));
+    assert.ok(b.draft.every(s => typeof s.text === 'string' && s.text.trim()));
+    }
   }
 });
 
-test('every interface translation exists in both languages and interpolation preserves numbers', () => {
+test('every interface translation exists in all languages and interpolation preserves numbers', () => {
   assert.deepEqual(Object.keys(locales.en).sort(), Object.keys(locales.fr).sort());
-  assert.ok(Object.values(locales.fr).every(v => typeof v === 'string' && v.length));
-  assert.equal(translate('fr', 'progress', { done: 2, total: 5 }), '2 cas examinés sur 5');
+  assert.deepEqual(Object.keys(locales.en).sort(), Object.keys(locales.de).sort());
+  for (const language of ['en', 'fr', 'de']) assert.ok(Object.values(locales[language]).every(v => typeof v === 'string' && v.length));
+  assert.equal(translate('fr', 'progress', { done: 2, total: 5 }), 'Cas examinés : 2 / 5');
   assert.throws(() => translate('fr', 'missing-key'), /Unknown translation/);
 });

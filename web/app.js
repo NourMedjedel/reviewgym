@@ -1,215 +1,188 @@
-import { scenarios as scenariosEn, actions } from './scenarios.js?v=0.2.0';
-import { scenariosFr } from './scenarios-fr.js?v=0.2.0';
-import { translate } from './locales.js?v=0.2.0';
-import { renderRepairWorkspace } from './repair-ui.js?v=0.2.0';
-import { summarizeRepairs } from './repair.js?v=0.2.0';
-let scenarios = scenariosEn;
-let language = 'en';
-const t = (key, values) => translate(language, key, values);
-import { reviewCase, summarizeSession } from './engine.js?v=0.2.0';
+import { scenarios as scenariosEn, actions } from './scenarios.js?v=0.3.0';
+import { scenariosFr } from './scenarios-fr.js?v=0.3.0';
+import { scenariosDe } from './scenarios-de.js?v=0.3.0';
+import { translate } from './locales.js?v=0.3.0';
+import { topics, topicFor } from './topics.js?v=0.3.0';
+import { resources } from './resources.js?v=0.3.0';
+import { reviewCase, summarizeSession } from './engine.js?v=0.3.0';
+import { renderRepairWorkspace } from './repair-ui.js?v=0.3.0';
+import { summarizeRepairs } from './repair.js?v=0.3.0';
 
 const $ = id => document.getElementById(id);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const KEY = 'reviewgym.practice.v1';
-let state = { version: 1, language: 'en', current: scenarios[0].id, reviews: {}, firstAttempts: [] };
+const packs = { en: scenariosEn, fr: scenariosFr, de: scenariosDe };
+let state = { version: 1, language: 'en', current: scenariosEn[0].id, reviews: {}, firstAttempts: [], repairs: {} };
 try {
   const stored = JSON.parse(localStorage.getItem(KEY));
   if (stored?.version === 1 && stored.reviews && Array.isArray(stored.firstAttempts)
-      && scenarios.some(c => c.id === stored.current)) state = stored;
-} catch { /* A blocked or unavailable store does not prevent practice. */ }
-language = state.language === 'fr' ? 'fr' : 'en';
+      && scenariosEn.some(c => c.id === stored.current)) state = stored;
+} catch { /* Practice still works when browser storage is unavailable. */ }
+let language = Object.hasOwn(packs, state.language) ? state.language : 'en';
 state.repairs ??= {};
-scenarios = language === 'fr' ? scenariosFr : scenariosEn;
+let scenarios = packs[language];
+let view = 'library';
 let retrying = false;
 let draft = blankReview();
+const t = (key, values) => translate(language, key, values);
 
-function blankReview() {
-  return { flags: [], evidence: [], openedSources: [], expandedSources: [], action: '', confidence: 50, assisted: false };
-}
-function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* Session still works in memory. */ }
-}
+function blankReview() { return { flags: [], evidence: [], openedSources: [], expandedSources: [], sourcesVisible: false, action: '', confidence: null, assisted: false }; }
+function persist() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* Keep the current session in memory. */ } }
 function currentCase() { return scenarios.find(c => c.id === state.current); }
 function completed() { return Boolean(state.reviews[state.current]) && !retrying; }
 function toggle(array, value) { return array.includes(value) ? array.filter(x => x !== value) : [...array, value]; }
+function confidenceText(value) { return Number.isInteger(value) ? `${value}%` : t('notProvided'); }
 
-function renderNavigation() {
-  const total = state.firstAttempts.length;
-  $('session-count').textContent = `${total} / ${scenarios.length}`;
-  $('progress-bar').style.width = `${total / scenarios.length * 100}%`;
-  $('progress-label').textContent = total ? t('progress', { done: total, total: scenarios.length }) : t('noCases');
-  $('case-list').innerHTML = scenarios.map(c => `<button class="case-item" data-case="${c.id}" aria-current="${c.id === state.current}"><span class="case-symbol" aria-hidden="true">${state.reviews[c.id] ? '✓' : '·'}</span><span><strong>${esc(c.title)}</strong><small>${esc(c.stage === 'transfer' ? t('freshCase') + ' · ' + c.minutes : c.skill)}</small></span></button>`).join('');
+function applyLanguage() {
+  document.documentElement.lang = language === 'de' ? 'de-CH' : language;
+  document.title = t('pageTitle');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  $('language').value = language;
+  $('close-modal').setAttribute('aria-label', t('close'));
+  document.querySelector('.topbar nav').setAttribute('aria-label', t('workspace'));
+  document.querySelector('.brand').setAttribute('aria-label', t('home'));
+  $('practice-nav').setAttribute('aria-current', view === 'guide' ? 'false' : 'page');
+  $('guide-nav').setAttribute('aria-current', view === 'guide' ? 'page' : 'false');
+}
+
+function renderLibrary() {
+  $('library-meta').textContent = t('libraryMeta', { total: scenarios.length });
+  $('progress-label').textContent = t('progress', { done: summarizeSession(state.firstAttempts).completed, total: scenarios.length });
+  $('topic-list').innerHTML = topics.map(topic => `<section class="topic-group" aria-labelledby="topic-${topic.id}"><div class="topic-heading"><h2 id="topic-${topic.id}">${t(topic.title)}</h2><p>${t(topic.description)}</p></div><div class="case-grid">${topic.cases.map(id => {
+    const c = scenarios.find(x => x.id === id);
+    return `<button class="case-card" data-case="${c.id}"><strong>${esc(c.title)}</strong><span class="skill">${esc(c.skill)}</span><span class="case-meta"><span>${c.minutes}</span>${c.stage === 'transfer' ? `<span>${t('freshCase')}</span>` : ''}${state.reviews[c.id] ? `<span class="reviewed">${t('completedLabel')}</span>` : ''}</span></button>`;
+  }).join('')}</div></section>`).join('');
+}
+
+function renderGuide() {
+  $('guide-habits').innerHTML = ['Data', 'Evidence', 'Agency', 'Pilot'].map(id => `<section class="habit"><h2>${t('habit' + id)}</h2><p>${t('habit' + id + 'Text')}</p></section>`).join('');
+  $('research-list').className = 'research-list';
+  $('research-list').innerHTML = resources.map(r => `<article class="research-item"><a href="${r.url}" target="_blank" rel="noopener noreferrer">${esc(r.title)}</a><p>${t(r.note)}</p></article>`).join('');
 }
 
 function renderDraft() {
-  const c = currentCase();
-  const result = completed() ? state.reviews[c.id].result : null;
+  const c = currentCase(), result = completed() ? state.reviews[c.id].result : null;
   $('draft').innerHTML = c.draft.map(s => {
-    let feedback = '';
-    if (result?.missed.includes(s.id)) feedback = ' feedback-missed';
-    if (result?.found.includes(s.id)) feedback = ' feedback-found';
-    if (result?.unnecessary.includes(s.id)) feedback = ' feedback-unnecessary';
+    const feedback = result?.missed.includes(s.id) ? ' feedback-missed' : result?.found.includes(s.id) ? ' feedback-found' : result?.unnecessary.includes(s.id) ? ' feedback-unnecessary' : '';
     return `<button class="sentence${feedback}" data-sentence="${s.id}" aria-pressed="${draft.flags.includes(s.id)}" ${completed() ? 'disabled' : ''}><span class="mark" aria-hidden="true">✓</span><span>${esc(s.text)}</span></button>`;
   }).join('');
-  const count = draft.flags.length;
-  $('flag-count').textContent = count ? t('flags', { n: count }) : t('noFlags');
+  $('flag-count').textContent = draft.flags.length ? t('flags', { n: draft.flags.length }) : t('noFlags');
 }
-
 function renderSources() {
+  $('source-count').textContent = String(currentCase().documents.length);
   $('sources').innerHTML = currentCase().documents.map(d => {
     const open = (draft.expandedSources || draft.openedSources).includes(d.id);
-    return `<article class="source"><button class="source-toggle" data-source="${d.id}" aria-expanded="${open}" aria-controls="source-${d.id}"><span class="document-icon" aria-hidden="true">≡</span><span><strong>${esc(d.title)}</strong><small>${esc(d.label)}</small></span><span class="chevron" aria-hidden="true">⌄</span></button><div class="source-body" id="source-${d.id}" ${open ? '' : 'hidden'}><p>${esc(d.body)}</p><label class="cite-label"><input type="checkbox" data-evidence="${d.id}" ${draft.evidence.includes(d.id) ? 'checked' : ''} ${completed() ? 'disabled' : ''}>${t('sourceLabel')}</label></div></article>`;
+    return `<article class="source"><button class="source-toggle" data-source="${d.id}" aria-expanded="${open}" aria-controls="source-${d.id}"><span>${esc(d.title)}<small>${esc(d.label)}</small></span><span class="chevron" aria-hidden="true">⌄</span></button><div class="source-body" id="source-${d.id}" ${open ? '' : 'hidden'}><p>${esc(d.body)}</p><label class="cite-label"><input type="checkbox" data-evidence="${d.id}" ${draft.evidence.includes(d.id) ? 'checked' : ''} ${completed() ? 'disabled' : ''}>${t('sourceLabel')}</label></div></article>`;
   }).join('');
 }
-
 function renderActions() {
-  $('actions').innerHTML = actions.map(a => `<button class="action" data-action="${a.id}" aria-pressed="${draft.action === a.id}" ${completed() ? 'disabled' : ''}><strong>${esc(t(a.id))}</strong><small>${esc(t(a.id + 'Description'))}</small></button>`).join('');
+  $('actions').innerHTML = actions.map(a => `<button class="action" data-action="${a.id}" aria-pressed="${draft.action === a.id}" ${completed() ? 'disabled' : ''}><strong>${t(a.id)}</strong><small>${t(a.id + 'Description')}</small></button>`).join('');
   $('submit').disabled = !draft.action || completed();
   $('submit').textContent = completed() ? t('complete') : retrying ? t('retrySubmit') : t('submit');
 }
-
 function renderFeedback() {
   const target = $('feedback');
-  if (!completed()) { target.hidden = true; target.innerHTML = ''; return; }
+  if (!completed()) { target.hidden = true; target.replaceChildren(); return; }
   const c = currentCase(), { result: r } = state.reviews[c.id];
   target.hidden = false;
-  target.className = `feedback${r.complete ? '' : ' warning'}`;
   const title = r.complete ? t('goodTitle') : r.disposition === 'unsafe-approval' ? t('unsafeTitle') : t('reviewTitle');
   const outcome = r.disposition === 'unsafe-approval' ? c.outcome.unsafe : r.complete ? c.outcome.safe : t('staysReview');
-  const i = scenarios.findIndex(x => x.id === c.id);
-  target.innerHTML = `<span class="feedback-label">${r.complete ? t('supportedCase') : t('practiceMoment')}</span><h3 id="feedback-title">${title}</h3><p>${esc(c.explanation)}</p><div class="outcome"><span>${t('consequence')}</span><p>${esc(outcome)}</p></div><p>${esc(c.consequence)}</p><div class="feedback-stats"><span>${r.expectedIssues ? `<b>${r.found.length} / ${r.expectedIssues}</b> ${t('found')}` : t('noConcerns')}</span><span><b>${r.unnecessary.length}</b> ${t('unnecessary')}</span><span>${t('evidence')} <b>${r.evidenceComplete ? t('supported') : t('incomplete')}</b></span><span>${t('confidenceLabel')} <b>${r.confidence}%</b> · ${t('selfReported')}</span></div><div class="feedback-buttons"><button class="secondary" id="retry">${t('retry')}</button><button class="primary" id="next">${i < scenarios.length - 1 ? scenarios[i + 1].stage === 'transfer' ? t('tryFresh') : t('next') : t('reviewSession')}</button></div><p class="first-attempt-note">${t('firstAttemptNote')}</p>`;
+  target.innerHTML = `<h2 id="feedback-title">${title}</h2><p>${esc(c.explanation)}</p><p class="outcome"><strong>${t('consequence')}</strong>${esc(outcome)}</p><details class="feedback-detail"><summary>${t('reviewDetails')}</summary><div class="feedback-stats"><span>${r.expectedIssues ? `${r.found.length} / ${r.expectedIssues} ${t('found')}` : t('noConcerns')}</span><span>${r.unnecessary.length} ${t('unnecessary')}</span><span>${t('evidence')}: ${r.evidenceComplete ? t('supported') : t('incomplete')}</span><span>${t('confidenceLabel')}: ${confidenceText(r.confidence)}</span></div><p class="first-attempt-note">${t('firstAttemptNote')}</p></details><section class="repair-workspace"></section><div class="feedback-buttons"><button class="secondary" id="retry">${t('retry')}</button><button class="primary" id="next">${t('next')}</button></div>`;
   $('retry').addEventListener('click', () => { retrying = true; draft = blankReview(); renderCase(); $('workspace').focus(); });
-  $('next').addEventListener('click', () => { if (i < scenarios.length - 1) selectCase(scenarios[i + 1].id); else showSession(); });
-  const workshop = document.createElement('section');
-  workshop.className = 'repair-workspace';
-  target.querySelector('.feedback-buttons').before(workshop);
+  $('next').addEventListener('click', () => {
+    const i = scenarios.findIndex(x => x.id === c.id);
+    if (i < scenarios.length - 1) selectCase(scenarios[i + 1].id); else showSession();
+  });
   state.repairs[c.id] ??= {};
   state.repairs[c.id][language] ??= {};
-  renderRepairWorkspace(workshop, { scenario: c, language, t,
-    record: state.repairs[c.id][language], onSave: persist });
+  renderRepairWorkspace(target.querySelector('.repair-workspace'), { scenario: c, language, t, record: state.repairs[c.id][language], onSave: persist });
 }
-
 function renderCase() {
   const c = currentCase();
-  applyLanguage();
-  $('case-context').textContent = c.context;
+  $('case-context').textContent = `${t(topicFor(c.id).title)} · ${c.minutes}`;
   $('case-title').textContent = c.title;
   $('case-mission').textContent = c.mission;
-  $('case-stage').textContent = c.stage === 'transfer' ? t('fresh') : t('guided');
-  $('case-stage').className = `stage${c.stage === 'transfer' ? ' transfer' : ''}`;
-  $('avatar').textContent = c.initials;
   $('request-person').textContent = `${c.person} · ${t('colleague')}`;
   $('request-text').textContent = c.request;
   $('recipient').textContent = c.recipient;
-  $('confidence').value = draft.confidence;
+  $('confidence').value = draft.confidence ?? '';
+  $('confidence').placeholder = t('notProvided');
   $('confidence').disabled = completed();
-  $('confidence-value').textContent = `${draft.confidence}%`;
   $('hint').disabled = completed();
   $('hint-box').hidden = !draft.assisted;
   $('hint-box').textContent = draft.assisted ? c.hint : '';
-  $('review-instruction').textContent = retrying ? t('retryInstruction') : t('commit');
   $('error').textContent = '';
-  renderNavigation(); renderDraft(); renderSources(); renderActions(); renderFeedback();
+  $('review-workspace').open = !completed();
+  $('review-summary').hidden = !completed();
+  $('evidence-panel').open = Boolean(draft.sourcesVisible);
+  renderDraft(); renderSources(); renderActions(); renderFeedback();
 }
-
+function render() {
+  applyLanguage();
+  $('library-view').hidden = view !== 'library';
+  $('guide-view').hidden = view !== 'guide';
+  $('workspace').hidden = view !== 'practice';
+  if (view === 'library') renderLibrary();
+  if (view === 'guide') renderGuide();
+  if (view === 'practice') renderCase();
+}
+function changeView(nextView) { view = nextView; render(); $('content').focus(); window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }
 function selectCase(id) {
   if (!scenarios.some(c => c.id === id)) return;
-  state.current = id;
-  retrying = false;
+  state.current = id; retrying = false;
   draft = state.reviews[id] ? structuredClone(state.reviews[id].submission) : blankReview();
-  persist(); renderCase(); $('workspace').focus();
+  view = 'practice'; persist(); render(); $('workspace').focus();
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 }
-
-function showModal(html) {
-  $('modal-body').innerHTML = html;
-  if (!$('modal').open) $('modal').showModal();
-}
-
+function showModal(html) { $('modal-body').innerHTML = html; if (!$('modal').open) $('modal').showModal(); }
 function showSession() {
-  const s = summarizeSession(state.firstAttempts);
-  const repairs = summarizeRepairs(state.repairs);
-  showModal(`<span class="eyebrow">${t('firstAttempts')}</span><h2>${t('sessionTitle')}</h2><p>${t('observations', { n: s.completed })}</p><div class="summary-grid"><div><strong>${s.supportedDecisions}/${s.completed}</strong><span>${t('supportedDecisions')}</span></div><div><strong>${s.issuesMissed}</strong><span>${t('missedConcerns')}</span></div><div><strong>${s.unnecessaryFlags}</strong><span>${t('extraFlags')}</span></div></div>${state.firstAttempts.map(r => `<div class="summary-row"><strong>${esc(scenarios.find(c => c.id === r.caseId)?.title || 'Case')}</strong><span>${r.complete ? t('supported') : t('needsPractice')} · ${r.confidence}%${r.assisted ? ' · ' + t('hintUsed') : ''}</span></div>`).join('')}<p>${t('assisted', { n: s.assistedCases, fresh: s.freshCasesCompleted })}</p><p>${t('sessionLimit')}</p><div class="modal-actions"><button class="secondary" id="reset">${t('reset')}</button><button class="primary" id="export">${t('download')}</button></div>`);
+  const s = summarizeSession(state.firstAttempts), rewrites = summarizeRepairs(state.repairs);
+  showModal(`<h2>${t('sessionTitle')}</h2><p>${t('observations', { n: s.completed })}</p><div class="summary-grid"><div><strong>${s.supportedDecisions}/${s.completed}</strong><span>${t('supportedDecisions')}</span></div><div><strong>${s.issuesMissed}</strong><span>${t('missedConcerns')}</span></div><div><strong>${s.unnecessaryFlags}</strong><span>${t('extraFlags')}</span></div></div>${state.firstAttempts.map(r => `<div class="summary-row"><strong>${esc(scenarios.find(c => c.id === r.caseId)?.title || r.caseId)}</strong><span>${r.complete ? t('supported') : t('needsPractice')} · ${confidenceText(r.confidence)}${r.assisted ? ' · ' + t('hintUsed') : ''}</span></div>`).join('')}<p>${t('assisted', { n: s.assistedCases, fresh: s.freshCasesCompleted })}</p><p>${t('repairSession', { checked: rewrites.checkedDrafts, assisted: rewrites.exampleAssistedDrafts })}</p><p>${t('sessionLimit')}</p><div class="modal-actions"><button class="secondary" id="reset">${t('reset')}</button><button class="primary" id="export">${t('download')}</button></div>`);
   $('export').addEventListener('click', exportSession);
-  const repairSummary = document.createElement('p');
-  repairSummary.textContent = t('repairSession', { checked: repairs.checkedDrafts, assisted: repairs.exampleAssistedDrafts });
-  $('modal-body').querySelector('.modal-actions').before(repairSummary);
   $('reset').addEventListener('click', () => {
     showModal(`<h2>${t('resetTitle')}</h2><p>${t('resetText')}</p><div class="modal-actions"><button class="secondary" id="cancel-reset">${t('keep')}</button><button class="primary" id="confirm-reset">${t('confirmReset')}</button></div>`);
-    $('cancel-reset').addEventListener('click', () => { $('modal').close(); showSession(); });
-    $('confirm-reset').addEventListener('click', () => { state = { version: 1, language, current: scenarios[0].id, reviews: {}, firstAttempts: [], repairs: {} }; persist(); $('modal').close(); selectCase(scenarios[0].id); });
+    $('cancel-reset').addEventListener('click', showSession);
+    $('confirm-reset').addEventListener('click', () => {
+      state = { version: 1, language, current: scenarios[0].id, reviews: {}, firstAttempts: [], repairs: {} };
+      draft = blankReview(); retrying = false; persist(); $('modal').close(); changeView('library');
+    });
   });
 }
-
 function exportSession() {
-  const record = { schemaVersion: 2, exportedAt: new Date().toISOString(),
-    kind: 'authored-practice-observations', summary: summarizeSession(state.firstAttempts),
-    firstAttempts: state.firstAttempts,
+  const record = { schemaVersion: 3, catalogVersion: '0.3.0', language, exportedAt: new Date().toISOString(),
+    kind: 'authored-practice-observations', summary: summarizeSession(state.firstAttempts), firstAttempts: state.firstAttempts,
     rewrites: state.repairs, rewriteSummary: summarizeRepairs(state.repairs),
-    limitations: ['Not an identity-verified or secure assessment.', 'Hints are tracked; external assistance is unknown.', 'Not evidence of validated learning gains or certification.'] };
-  const address = URL.createObjectURL(new Blob([JSON.stringify(record, null, 2)], { type: 'application/json' }));
-  const anchor = document.createElement('a'); anchor.href = address; anchor.download = 'reviewgym-session.json';
-  anchor.click(); setTimeout(() => URL.revokeObjectURL(address), 1000);
+    limitations: ['Not an identity-verified assessment.', 'External assistance is unknown.', 'Learning effectiveness and regulatory compliance have not been validated.', 'Rewrite checks do not validate free-form meaning.'] };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(record, null, 2)], { type: 'application/json' }));
+  const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'reviewgym-session.json'; anchor.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-$('case-list').addEventListener('click', event => {
-  const target = event.target.closest('[data-case]');
-  if (target) selectCase(target.dataset.case);
+$('topic-list').addEventListener('click', e => { const c = e.target.closest('[data-case]'); if (c) selectCase(c.dataset.case); });
+$('practice-nav').addEventListener('click', () => changeView('library'));
+$('back-library').addEventListener('click', () => changeView('library'));
+$('guide-nav').addEventListener('click', () => changeView('guide'));
+$('language').addEventListener('change', e => { language = e.target.value; state.language = language; scenarios = packs[language]; persist(); render(); });
+$('draft').addEventListener('click', e => { const s = e.target.closest('[data-sentence]'); if (s && !completed()) { draft.flags = toggle(draft.flags, s.dataset.sentence); renderDraft(); } });
+$('evidence-panel').addEventListener('toggle', e => { draft.sourcesVisible = e.target.open; });
+$('sources').addEventListener('click', e => {
+  const s = e.target.closest('[data-source]');
+  if (s) { const id = s.dataset.source; draft.expandedSources = toggle(draft.expandedSources || draft.openedSources, id); if (!draft.openedSources.includes(id)) draft.openedSources.push(id); renderSources(); }
 });
-$('draft').addEventListener('click', event => {
-  const target = event.target.closest('[data-sentence]');
-  if (target && !completed()) { draft.flags = toggle(draft.flags, target.dataset.sentence); renderDraft(); }
-});
-$('sources').addEventListener('click', event => {
-  const target = event.target.closest('[data-source]');
-  if (target) {
-    const id = target.dataset.source;
-    draft.expandedSources = toggle(draft.expandedSources || draft.openedSources, id);
-    if (!draft.openedSources.includes(id)) draft.openedSources.push(id);
-    renderSources();
-  }
-});
-$('sources').addEventListener('change', event => {
-  if (event.target.dataset.evidence && !completed()) draft.evidence = toggle(draft.evidence, event.target.dataset.evidence);
-});
-$('actions').addEventListener('click', event => {
-  const target = event.target.closest('[data-action]');
-  if (target && !completed()) { draft.action = target.dataset.action; renderActions(); }
-});
-$('confidence').addEventListener('input', event => { draft.confidence = Number(event.target.value); $('confidence-value').textContent = `${draft.confidence}%`; });
+$('sources').addEventListener('change', e => { if (e.target.dataset.evidence && !completed()) draft.evidence = toggle(draft.evidence, e.target.dataset.evidence); });
+$('actions').addEventListener('click', e => { const a = e.target.closest('[data-action]'); if (a && !completed()) { draft.action = a.dataset.action; renderActions(); } });
+$('confidence').addEventListener('input', e => { draft.confidence = e.target.value === '' ? null : Number(e.target.value); });
 $('hint').addEventListener('click', () => { draft.assisted = true; $('hint-box').hidden = false; $('hint-box').textContent = currentCase().hint; });
 $('submit').addEventListener('click', () => {
   try {
     const result = reviewCase(currentCase(), draft);
     state.reviews[state.current] = { submission: structuredClone(draft), result };
-    if (!state.firstAttempts.some(x => x.caseId === result.caseId)) state.firstAttempts.push(result);
-    retrying = false; persist(); renderCase();
-    $('feedback').focus(); $('feedback').scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+    if (!state.firstAttempts.some(r => r.caseId === result.caseId)) state.firstAttempts.push(result);
+    retrying = false; persist(); render(); $('feedback').focus();
+    $('feedback').scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
   } catch { $('error').textContent = t('error'); }
 });
 $('session').addEventListener('click', showSession);
 $('close-modal').addEventListener('click', () => $('modal').close());
-$('modal').addEventListener('click', event => { if (event.target === $('modal')) { const r = $('modal').getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) $('modal').close(); } });
-$('about').addEventListener('click', () => showModal(`<span class="eyebrow">${t('aboutEyebrow')}</span><h2>${t('aboutTitle')}</h2><p>${t('aboutIntro')}</p><h3>${t('helpAllowed')}</h3><p>${t('aboutHelp')}</p><h3>${t('freshTitle')}</h3><p>${t('freshText')}</p><h3>${t('researchTitle')}</h3><p>${t('researchText')} <a class="inline-link" href="https://arxiv.org/abs/2102.09692" target="_blank" rel="noopener noreferrer">${t('readStudy')}</a>.</p><p>${t('authored')}</p>`));
-
-function applyLanguage() {
-  document.documentElement.lang = language;
-  document.title = t('pageTitle');
-  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-  document.querySelectorAll('[data-language]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.language === language)));
-  $('close-modal').setAttribute('aria-label', t('close'));
-  document.querySelector('.language-switch').setAttribute('aria-label', t('language'));
-  $('case-list').setAttribute('aria-label', t('practiceCases'));
-  document.querySelector('.topbar nav').setAttribute('aria-label', t('workspace'));
-  document.querySelector('.brand').setAttribute('aria-label', t('home'));
-}
-document.querySelector('.language-switch').addEventListener('click', event => {
-  const choice = event.target.closest('[data-language]');
-  if (!choice) return;
-  language = choice.dataset.language;
-  state.language = language;
-  scenarios = language === 'fr' ? scenariosFr : scenariosEn;
-  persist(); renderCase();
-});
-
-selectCase(state.current);
+$('modal').addEventListener('click', e => { if (e.target === $('modal')) { const r = $('modal').getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) $('modal').close(); } });
+render();

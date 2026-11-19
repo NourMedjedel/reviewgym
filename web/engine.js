@@ -11,7 +11,7 @@ export function reviewCase(scenario, submission) {
   if (!['approve', 'revise', 'escalate'].includes(submission.action)) {
     throw new Error('Choose a next action.');
   }
-  if (!Number.isInteger(submission.confidence) || submission.confidence < 0 || submission.confidence > 100) {
+  if (submission.confidence !== null && (!Number.isInteger(submission.confidence) || submission.confidence < 0 || submission.confidence > 100)) {
     throw new Error('Confidence must be an integer between 0 and 100.');
   }
   const found = [...flagged].filter(id => expected.has(id));

@@ -4,17 +4,18 @@
 
 **[Try the live demo](https://nourmedjedel.github.io/reviewgym/)** ·
 [Short video](docs/reviewgym-demo.mp4) ·
+[Still overview](docs/preview-en.png) ·
 [Design notes](docs/design.md)
 
-Review a plausible assistant draft, inspect the source documents, flag the claims
-that need attention and decide whether to approve, revise or involve an authorised
-person. See a simulated consequence, get feedback and try the same principle in a
-different context. Then edit the message yourself with a live recipient preview.
-Some drafts are already correct.
+Ten exercises from a **fictional banking-software workplace**: review an assistant
+draft, inspect its sources and decide what happens next. Then try a rewrite with a
+recipient preview. Some drafts are already correct.
 
-**English and French included.** Language switching preserves the current review
-and session history. All scenarios, policies and assistant drafts are fictional
-and human-authored. No LLM or paid API is needed to run the prototype.
+**English, French and German (Swiss standard spelling).** Language switching
+preserves review choices; each language keeps its own rewrite. All scenarios,
+policies and assistant outputs are authored simulations. No LLM or paid API is
+needed. Translations are machine-assisted and checked for content/rubric parity;
+independent language and domain review remains open.
 
 ![Screen walkthrough: inspect the evidence, review the draft and repair the handoff](docs/demo.webp)
 
@@ -38,17 +39,26 @@ npm test
 
 ## First demo
 
-1. Open **A helpful handoff** / **Un récapitulatif bien utile**.
+1. Choose **Client data & privacy**, then **A helpful handoff**.
 2. Inspect the draft and the external-sharing rule.
-3. Flag the customer identifiers and confidential price. Cite the rule and choose
-   **Revise** / **Corriger** to see the consequence.
-4. Open the **rewrite workshop**, remove those confidential details and keep the
+3. Open **Sources**, cite the sharing rule, flag the identifiers and confidential
+   price, then choose **Revise** and **Check my decision**.
+4. Choose **Edit the text**, remove those confidential details and keep the
    reproduction steps. Watch the recipient preview update, then check the rewrite.
-5. Try the supported summary and the fresh HR-context case. Switch EN/FR at any time;
+5. Try the supported summary and the fresh HR-context case. Switch language at any time;
    each language keeps its own working draft.
 
-Other cases cover a real but archived citation and a refund promise made before
-human approval. The rubric checks sentence-level observations, source selection
+The library has five topics:
+
+| Topic | Exercises |
+| --- | --- |
+| Client data & privacy | Vendor handoff; anonymous workshop brief |
+| Evidence & numbers | Archived procedure; payment denominators and causality |
+| Agents & permissions | Prompt injection in a ticket; read-only connector scope |
+| Tools & adoption | Approved tool selection; a supported project summary |
+| Human oversight & evaluation | Pending refund approval; bounded pilot results |
+
+The rubric checks sentence-level observations, source selection
 and the next action. Selecting every sentence or citing both current and obsolete
 procedures does not earn a supported result.
 
@@ -64,18 +74,18 @@ example is marked as assistance and does not overwrite your draft.
 
 The session retains the **first attempt** separately from retries. It records
 missed concerns, unnecessary flags, evidence selection, next action, reported
-confidence and requested hints. Download an inspectable JSON summary from
+confidence when provided, and viewed hints. Download an inspectable JSON summary from
 **Your session** / **Votre session**.
 
-The JSON export (schema version 2) also contains working rewrites by case and
+The JSON export (schema version 3) also contains working rewrites by case and
 language, their first and latest checked versions, and whether an example was
 viewed. Editing a message does not replace the first review decision. Exports
 include the text you typed; use fictional details only.
 
 This is a formative practice tool, not an identity-verified exam, an anti-cheating
 system or a validated competence score. External AI assistance cannot be detected.
-Opening a source does not prove that someone read or understood it. The first
-prototype has five cases and only one fresh-context case; it does not establish
+Opening a source does not prove that someone read or understood it. The current
+prototype has ten cases and only one fresh-context case; it does not establish
 learning gains, generalisation or long-term retention. Rubrics are deliberately
 visible in the browser source.
 
@@ -86,16 +96,23 @@ model requests are involved. Reset is available in the session panel.
 ## Design and research
 
 The product brief and research limits are in [docs/design.md](docs/design.md).
+The **Field guide** keeps research and practical habits out of the exercise view.
 The initial experience is informed by research on reflection and AI reliance,
 including [Buçinca et al. (2021)](https://arxiv.org/abs/2102.09692). That experiment
 found reduced overreliance in its studied task, alongside a usability trade-off;
 it does not validate ReviewGym. [Lee et al. (2025)](https://www.microsoft.com/en-us/research/publication/the-impact-of-generative-ai-on-critical-thinking-self-reported-reductions-in-cognitive-effort-and-confidence-effects-from-a-survey-of-knowledge-workers/)
 reports self-reported critical-thinking patterns, not a causal test of training.
 
+Banking-software risk themes also draw on [FINMA Guidance 08/2024](https://www.finma.ch/en/news/2024/12/20241218-mm-finma-am-08-24/)
+and OWASP’s guidance on [prompt injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+and [excessive agency](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/).
+Exercise rules are invented, not quotations of Finnova policies or a regulatory
+compliance assessment. [Content and translation review](CONTRIBUTING.md) is welcome.
+
 ## Next work
 
 - Test the cases with nontechnical learners and trainers; revise ambiguous rubrics.
-- Add case variants and independently reviewed content packs.
+- Independently review case content and translations, then add matched variants.
 - Offer an optional local-model coach that points to evidence; keep the authored
   rubric separate from generated explanations.
 - Evaluate learning using new cases and a delayed follow-up, with clear consent
