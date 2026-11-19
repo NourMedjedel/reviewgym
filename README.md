@@ -119,7 +119,7 @@ reports self-reported critical-thinking patterns, not a causal test of training.
 Banking-software risk themes also draw on [FINMA Guidance 08/2024](https://www.finma.ch/en/news/2024/12/20241218-mm-finma-am-08-24/)
 and OWASP’s guidance on [prompt injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
 and [excessive agency](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/).
-Exercise rules are invented, not quotations of Finnova policies or a regulatory
+Exercise rules are invented, not quotations of an existing policies or a regulatory
 compliance assessment. [Content and translation review](CONTRIBUTING.md) is welcome.
 
 ## Next work

@@ -129,5 +129,4 @@ issue certification decisions.
 
 The generic scenario engine can support internal team training and reusable case
 packs. A banking-software organisation could adapt it for synthetic support,
-operations or internal knowledge work after reviewing the content. No actual
-Finnova policy, client data, internal system or endorsement is assumed.
+operations or internal knowledge work after reviewing the content. No actual policy, client data, internal system or endorsement is assumed.

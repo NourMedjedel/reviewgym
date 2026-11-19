@@ -1,4 +1,4 @@
-// Fictional banking-software workplace cases. Not Finnova procedures or legal advice.
+// Fictional banking-software workplace cases.
 export const bankingCases = [
   {
     id: 'injected-ticket', family: 'prompt-injection', stage: 'practice',
