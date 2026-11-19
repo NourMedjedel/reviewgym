@@ -1,14 +1,6 @@
 // English, French, Swiss standard German. No silent language fallback.
 export const uiCopy = {
   explore: ['Choose a topic', 'Choisir un thème', 'Ein Thema wählen'],
-  flowTitle: ['Example: check a deadline', 'Exemple : vérifier un délai', 'Beispiel: eine Frist prüfen'],
-  flowDraft: ['Read the AI draft', 'Lire le brouillon de l’IA', 'Den KI-Entwurf lesen'],
-  flowDraftExample: ['“Your first update is due within 24 hours.”', '« Votre premier point de situation est dû sous 24 heures. »', '«Deine erste Statusmeldung ist innerhalb von 24 Stunden fällig.»'],
-  flowSources: ['Compare with the sources', 'Comparer aux sources', 'Mit den Quellen vergleichen'],
-  flowSourceExample: ['Current rule: 4 hours. Alert received at 09:00.', 'Règle en vigueur : 4 heures. Alerte reçue à 09:00.', 'Aktuelle Regel: 4 Stunden. Meldung um 09:00 erhalten.'],
-  flowDecision: ['Choose the next step', 'Choisir la suite', 'Den nächsten Schritt wählen'],
-  flowDecisionExample: ['Revise: first update by 13:00 today.', 'Corriger : premier point avant 13:00 aujourd’hui.', 'Überarbeiten: erste Statusmeldung heute bis 13:00.'],
-  flowNote: ['Approve, revise or refer: the evidence guides your choice.', 'Valider, corriger ou transmettre : les sources guident votre choix.', 'Freigeben, überarbeiten oder weitergeben: Die Quellen leiten deine Entscheidung.'],
   notProvided: ['Not provided', 'Non renseignée', 'Nicht angegeben'],
   language: ['Language', 'Langue', 'Sprache'], workspace: ['Workspace', 'Espace de travail', 'Arbeitsbereich'],
   home: ['ReviewGym home', 'Accueil ReviewGym', 'ReviewGym Startseite'],

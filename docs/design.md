@@ -28,11 +28,10 @@ The library is separate from the single-exercise view. Sources open on demand,
 reflection is optional, and a recorded review collapses when feedback appears.
 The field guide contains reusable habits and primary-source context. The
 monochrome visual system uses a display heading and a separate editorial topic
-column. The orbital drawing connects three labelled panels showing a concrete, fictional deadline example: compare
-the AI's 24-hour claim with the current four-hour rule, then revise the update
-deadline. The steps describe the real exercise rather than an abstract process. The orbital
-background rotates slowly behind stationary text panels; reduced-motion
-preferences disable this decorative animation. It represents no live activity.
+column. The decorative orbital illustration has no labels or process claims.
+Fine wireframe geometry, translucent shading and two slowly counter-rotating
+layers blend into the page background. Reduced-motion preferences disable both
+animations. The drawing represents no live activity or risk measurement.
 The exercise view keeps the same focused sequence, with context, draft, sources
 and decision. The
 experience avoids timers and speed-based rewards. Correct answers are

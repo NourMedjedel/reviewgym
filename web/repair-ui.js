@@ -1,4 +1,4 @@
-import { inspectRepair, exampleRepair, retainRepairAttempt, MAX_REPAIR_LENGTH } from './repair.js?v=0.3.2';
+import { inspectRepair, exampleRepair, retainRepairAttempt, MAX_REPAIR_LENGTH } from './repair.js?v=0.3.3';
 
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
