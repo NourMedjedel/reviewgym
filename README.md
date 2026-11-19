@@ -2,6 +2,10 @@
 
 **Practise the decisions that make AI useful at work.**
 
+**[Try the live demo](https://nourmedjedel.github.io/reviewgym/)** ·
+[Short video](docs/reviewgym-demo.mp4) ·
+[Design notes](docs/design.md)
+
 Review a plausible assistant draft, inspect the source documents, flag the claims
 that need attention and decide whether to approve, revise or involve an authorised
 person. See a simulated consequence, get feedback and try the same principle in a
@@ -12,7 +16,10 @@ Some drafts are already correct.
 and session history. All scenarios, policies and assistant drafts are fictional
 and human-authored. No LLM or paid API is needed to run the prototype.
 
-![ReviewGym workplace review, with a sentence flagged and a source open](docs/preview-en.png)
+![Screen walkthrough: inspect the evidence, review the draft and repair the handoff](docs/demo.webp)
+
+Edited screen walkthrough of the working prototype. All assistant outputs are
+authored simulations; no message is sent to an external recipient.
 
 ## Run locally
 
@@ -93,6 +100,12 @@ reports self-reported critical-thinking patterns, not a causal test of training.
   rubric separate from generated explanations.
 - Evaluate learning using new cases and a delayed follow-up, with clear consent
   and a comparison condition before claiming effectiveness.
+
+## Publishing
+
+GitHub Actions runs the tests before publishing only `web/` to GitHub Pages on
+each push to `main`. Pull requests run tests without deploying. The static demo
+needs no server credentials or model keys.
 
 Independent portfolio prototype by Nour Medjedel. Not affiliated with Finnova,
 Microsoft or any training/certification provider. MIT licensed.
