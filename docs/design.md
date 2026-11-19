@@ -29,16 +29,15 @@ reflection is optional, and a recorded review collapses when feedback appears.
 The field guide contains reusable habits and primary-source context. The
 monochrome visual system uses a display heading and a separate editorial topic
 column. A banknote-inspired guilloche engraving replaces literal banking icons.
-A stationary glass review lens magnifies its linework while the engraved seal and
-fine orbital security threads rotate slowly underneath. The drawing connects
-financial-document authenticity with the act of inspecting AI output, without
-text overlays. Reduced-motion preferences disable both animations. This is an
+A gently floating glass review lens magnifies its linework while the engraved
+seal and fine orbital security threads rotate slowly underneath. The drawing
+connects financial-document authenticity with the act of inspecting AI output, without
+text overlays. Reduced-motion preferences disable the animations. This is an
 original decorative metaphor, not a real banknote, an authenticity test, live
 telemetry, or a security claim.
 The exercise view keeps the same focused sequence, with context, draft, sources
-and decision. The
-experience avoids timers and speed-based rewards. Correct answers are
-included so that rejecting everything is not a successful strategy. A request for
+and decision. The experience avoids timers and speed-based rewards. Correct
+answers are included so that rejecting everything is not a successful strategy. A request for
 help is recorded as an observation, not penalised as misconduct.
 
 ## Rewrite workshop
@@ -129,4 +128,5 @@ issue certification decisions.
 
 The generic scenario engine can support internal team training and reusable case
 packs. A banking-software organisation could adapt it for synthetic support,
-operations or internal knowledge work after reviewing the content. No actual policy, client data, internal system or endorsement is assumed.
+operations or internal knowledge work after reviewing the content. The scenarios
+use fictional policies and data; no organisation's endorsement is implied.

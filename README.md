@@ -74,8 +74,8 @@ example is marked as assistance and does not overwrite your draft.
 
 The session retains the **first attempt** separately from retries. It records
 missed concerns, unnecessary flags, evidence selection, next action, reported
-confidence when provided, and viewed hints. Download an inspectable JSON summary from
-**Your session** / **Votre session**.
+confidence when provided, and viewed hints. Download an inspectable JSON summary
+from **Session**.
 
 The JSON export (schema version 3) also contains working rewrites by case and
 language, their first and latest checked versions, and whether an example was
@@ -119,8 +119,9 @@ reports self-reported critical-thinking patterns, not a causal test of training.
 Banking-software risk themes also draw on [FINMA Guidance 08/2024](https://www.finma.ch/en/news/2024/12/20241218-mm-finma-am-08-24/)
 and OWASP’s guidance on [prompt injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
 and [excessive agency](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/).
-Exercise rules are invented, not quotations of an existing policies or a regulatory
-compliance assessment. [Content and translation review](CONTRIBUTING.md) is welcome.
+Exercise rules are fictional and do not reproduce any organisation's policies.
+This prototype does not assess regulatory compliance.
+[Content and translation review](CONTRIBUTING.md) is welcome.
 
 ## Next work
 
@@ -137,4 +138,5 @@ GitHub Actions runs the tests before publishing only `web/` to GitHub Pages on
 each push to `main`. Pull requests run tests without deploying. The static demo
 needs no server credentials or model keys.
 
-Independent portfolio prototype by Nour Medjedel. Not affiliated with any training/certification provider. MIT licensed.
+Independent portfolio prototype by Nour Medjedel. Not affiliated with any
+training/certification provider. MIT licensed.
